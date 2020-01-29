@@ -28,8 +28,10 @@ export default function({ navigation }) {
     }, [dispatch]);
 
     const renderItem = ({ item }) => {
+        const { id } = item;
+
         function onPress() {
-            navigation.navigate('Product', { number });
+            navigation.navigate('Product', { number, categoryId: id });
         }
         return <CategoryItem item={item} onPress={onPress} />;
     };
@@ -49,7 +51,7 @@ export default function({ navigation }) {
                 data={data}
                 loading={loading}
                 message={message}
-                keyExtractor={item => item.id}
+                keyExtractor={item => toString(item.id)}
                 renderItem={renderItem}
             />
         </Container>
@@ -63,9 +65,9 @@ function CategoryItem({ item, onPress }) {
         <CategoryContainer onPress={onPress}>
             <Photo source={require('../assets/pizza.jpg')} />
             <Gradient
-                start={{ x: 0, y: 1.75 }}
-                end={{ x: 0.5, y: 1.0 }}
-                locations={[0, 0.7, 1]}
+                start={{ x: 0, y: 1 }}
+                end={{ x: 1, y: 0 }}
+                locations={[0, 0.4, 0.7]}
                 colors={[
                     'rgba(0, 0, 0, .7)',
                     'rgba(0, 0, 0, .5)',

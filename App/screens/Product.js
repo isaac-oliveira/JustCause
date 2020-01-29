@@ -1,52 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { SectionList } from 'react-native';
-
-import Toolbar from '../components/Toolbar';
-import { leftZero } from '../util';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import {
     Container,
-    HorizontalView,
-    InputQtd,
-    AddButton,
-    Form,
-    Label,
-    HeaderContainer,
-    HeaderTitle,
-    ItemContainer,
-    ItemTitle,
-    ComboBox,
-    Divider,
+    ContainerItem,
+    Photo,
+    Title,
+    Gradient,
 } from './styles/ProductStyle';
 
+import Toolbar from '../components/Toolbar';
+import List from '../components/List';
+import { ProductCreators } from '../store/reducers/products';
 import JustCauseApi from '../services/JustCauseApi';
-import Color from '../themes/Color';
-
-import { group } from '../data';
+import { leftZero } from '../util';
 
 export default function({ navigation }) {
-    const { number } = navigation.state.params;
-    const [subcategories, setSubcategories] = useState([]);
+    const { categoryId, number } = navigation.state.params;
+    const { loading, data, message } = useSelector(({ products }) => products);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        const response = JustCauseApi.getSubategories();
+        dispatch(ProductCreators.getProducts(categoryId));
+    }, [categoryId, dispatch]);
 
-        console.log(response);
-        setSubcategories(group);
-    }, []);
-
-    function add() {
-        navigation.navigate('Cart', { number });
-    }
-
-    const renderSectionHeader = ({ section }) => (
-        <SectionHeader title={section.title} />
-    );
-
-    const renderItem = ({ index, section: { data }, item }) => {
-        const isLast = index == data.length - 1;
-
-        return <SectionItem isLast={isLast} item={item} />;
+    const renderItem = ({ item }) => {
+        const { nome } = item;
+        function onPress() {
+            navigation.navigate('ProductDetails', {
+                productName: nome,
+                number,
+            });
+        }
+        return <Item item={item} onPress={onPress} />;
     };
 
     return (
@@ -55,46 +41,36 @@ export default function({ navigation }) {
                 title={`Mesa ${leftZero(number)}`}
                 onBack={() => navigation.goBack(null)}
             />
-            <SectionList
-                style={{ flex: 1 }}
-                sections={subcategories}
-                renderSectionHeader={renderSectionHeader}
+            <List
+                style={{ alignSelf: 'center', flex: 1, padding: 10 }}
+                data={data}
+                loading={loading}
+                message={message}
+                keyExtractor={item => item.id}
                 renderItem={renderItem}
+                numColumns={2}
             />
-            <HorizontalView>
-                <Form>
-                    <Label>Qtd: </Label>
-                    <InputQtd
-                        defaultValue={leftZero(1)}
-                        keyboardType="number-pad"
-                    />
-                </Form>
-                <AddButton
-                    title="Adicionar"
-                    background={Color.primary}
-                    onPress={add}
-                />
-            </HorizontalView>
         </Container>
     );
 }
 
-function SectionHeader({ title }) {
-    return (
-        <HeaderContainer>
-            <HeaderTitle>{title}</HeaderTitle>
-        </HeaderContainer>
-    );
-}
-
-function SectionItem({ isLast, item }) {
-    const { title, active } = item;
+function Item({ item, onPress }) {
+    const { nome } = item;
 
     return (
-        <ItemContainer>
-            <ItemTitle>{title}</ItemTitle>
-            <ComboBox active={active} />
-            {!isLast && <Divider />}
-        </ItemContainer>
+        <ContainerItem onPress={onPress}>
+            <Photo source={require('../assets/pizza.jpg')} />
+            <Gradient
+                start={{ x: 0, y: 1 }}
+                end={{ x: 1, y: 0 }}
+                locations={[0, 0.4, 0.7]}
+                colors={[
+                    'rgba(0, 0, 0, .7)',
+                    'rgba(0, 0, 0, .5)',
+                    'rgba(0, 0, 0, .0)',
+                ]}
+            />
+            <Title>{nome}</Title>
+        </ContainerItem>
     );
 }
