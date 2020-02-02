@@ -1,90 +1,85 @@
-import React, { useState, useEffect } from 'react';
-import { SectionList } from 'react-native';
+import React, { useEffect } from 'react';
+import { SectionList, Text } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
-import Toolbar from '../components/Toolbar';
-import { leftZero } from '../util';
-
+import { Container } from './styles';
 import {
-    Container,
-    HorizontalView,
-    InputQtd,
-    AddButton,
-    Form,
-    Label,
-    HeaderContainer,
-    HeaderTitle,
-    ItemContainer,
-    ItemTitle,
-    ComboBox,
+    SectionHeader,
+    Touchable,
+    ContainerItem,
+    TitleItem,
+    CheckBoxItem,
+    ComboBoxItem,
     Divider,
 } from './styles/ProductDetailsStyle';
 
-import Color from '../themes/Color';
-import { groups } from '../data';
+import Toolbar from '../components/Toolbar';
+import { SubcategoryCreators } from '../store/reducers/subcategories';
 
 export default function({ navigation }) {
-    const { productName, number } = navigation.state.params;
+    const { productId, productName, number } = navigation.state.params;
+    const { data } = useSelector(({ subcategories }) => subcategories);
+    const dispatch = useDispatch();
 
-    function add() {
-        navigation.navigate('Cart', { number });
-    }
+    useEffect(() => {
+        dispatch(SubcategoryCreators.getSubcategories(productId));
+    });
 
-    const renderSectionHeader = ({ section }) => (
-        <SectionHeader title={section.title} />
-    );
+    const renderSectionHeader = ({ section }) => {
+        const { title } = section;
+        return <SectionHeader>{title}</SectionHeader>;
+    };
 
-    const renderItem = ({ index, section: { data }, item }) => {
-        const isLast = index == data.length - 1;
-
-        return <SectionItem isLast={isLast} item={item} />;
+    const renderSectionItem = ({ section, item, index }) => {
+        const isLast = index === section.data.length - 1;
+        if (section.singleSelection) {
+            const { currentItem } = section;
+            function onPress() {
+                section.currentItem = currentItem.id !== item.id ? item : {};
+                dispatch(SubcategoryCreators.refresh(data));
+            }
+            return (
+                <Item
+                    item={item}
+                    currentItem={currentItem}
+                    isLast={isLast}
+                    onPress={onPress}
+                />
+            );
+        } else {
+            function onPress() {
+                item.selected = !item.selected;
+                dispatch(SubcategoryCreators.refresh(data));
+            }
+            return <Item item={item} isLast={isLast} onPress={onPress} />;
+        }
     };
 
     return (
         <Container>
-            <Toolbar
-                title={productName}
-                onBack={() => navigation.goBack(null)}
-            />
+            <Toolbar title={productName} onBack={() => navigation.goBack()} />
             <SectionList
-                style={{ flex: 1 }}
-                sections={groups}
+                sections={data}
+                keyExtractor={item => item.id}
                 renderSectionHeader={renderSectionHeader}
-                renderItem={renderItem}
+                renderItem={renderSectionItem}
             />
-            <HorizontalView>
-                <Form>
-                    <Label>Qtd: </Label>
-                    <InputQtd
-                        defaultValue={leftZero(1)}
-                        keyboardType="number-pad"
-                    />
-                </Form>
-                <AddButton
-                    title="Adicionar"
-                    background={Color.primary}
-                    onPress={add}
-                />
-            </HorizontalView>
         </Container>
     );
 }
 
-function SectionHeader({ title }) {
+function Item({ item, currentItem = null, isLast, onPress }) {
+    const { id, title, selected } = item;
     return (
-        <HeaderContainer>
-            <HeaderTitle>{title}</HeaderTitle>
-        </HeaderContainer>
-    );
-}
-
-function SectionItem({ isLast, item }) {
-    const { title, active } = item;
-
-    return (
-        <ItemContainer>
-            <ItemTitle>{title}</ItemTitle>
-            <ComboBox active={active} />
-            {!isLast && <Divider />}
-        </ItemContainer>
+        <Touchable onPress={onPress}>
+            <ContainerItem>
+                <TitleItem>{title}</TitleItem>
+                {currentItem && (
+                    <ComboBoxItem checked={id === currentItem.id} />
+                )}
+                {!currentItem && <CheckBoxItem checked={selected} />}
+                {!isLast && <Divider />}
+            </ContainerItem>
+        </Touchable>
     );
 }

@@ -1,6 +1,19 @@
 const INITIAL_STATE = {
-    loading: true,
-    data: [],
+    loading: false,
+    data: [
+        {
+            id: 2,
+            nome: 'Pizza',
+            valor: '35',
+            disponivel: true,
+        },
+        {
+            id: 3,
+            nome: 'Pastel',
+            valor: '35',
+            disponivel: true,
+        },
+    ],
     message: null,
 };
 

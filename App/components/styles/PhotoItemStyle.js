@@ -1,22 +1,22 @@
 import styled from 'styled-components/native';
+import { Dimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+
 import Color from '../../themes/Color';
 import Font from '../../themes/Font';
 
-export const Container = styled.View`
-    flex: 1;
-    background-color: ${Color.background};
-`;
+const width = Dimensions.get('window').width;
+const margin = 15;
 
-export const CategoryContainer = styled.TouchableOpacity`
-    margin: 8px;
+export const ContainerItem = styled.TouchableOpacity`
+    margin: ${margin}px;
     background-color: #aaa;
     border-radius: 8px;
     elevation: 8px;
 `;
 
 export const Photo = styled.Image`
-    width: 100%;
+    width: ${({ column }) => width / column - margin * 2 * column};
     height: 100px;
     border-radius: 8px;
 `;

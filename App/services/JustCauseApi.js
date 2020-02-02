@@ -47,8 +47,18 @@ async function getProducts(categoryId) {
     return response;
 }
 
-async function getSubategories() {
-    const response = await api.get('/subcategorias/1');
+async function getSubcategories(productId) {
+    const response = await api.get(
+        `/filtro/produto/subcategorias/${productId}`,
+    );
+
+    return response;
+}
+
+async function getSubcategoryItens(subcategoryId) {
+    const response = await api.get(
+        `/filtro/subcategoria/itens/${subcategoryId}`,
+    );
 
     return response;
 }
@@ -59,5 +69,6 @@ export default {
     getTables,
     getCategories,
     getProducts,
-    getSubategories,
+    getSubcategories,
+    getSubcategoryItens,
 };
