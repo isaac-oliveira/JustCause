@@ -3,7 +3,9 @@ import { Container, Title, Content } from './styles/ToolbarStyle';
 import IconButton from './IconButton';
 
 export default function({ onBack, content, title }) {
-    const containerStyle = content ? { flexDirection: 'row-reverse' } : {};
+    const containerStyle = content
+        ? { flexDirection: 'row-reverse', paddingLeft: 10, paddingRight: 10 }
+        : { padding: 10 };
     const titleStyle = !content
         ? { position: 'absolute', width: '100%', textAlign: 'center' }
         : {};

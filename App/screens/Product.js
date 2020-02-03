@@ -23,8 +23,7 @@ export default function({ navigation }) {
         const { id, nome } = item;
         function onPress() {
             navigation.navigate('ProductDetails', {
-                productId: id,
-                productName: nome,
+                product: item,
                 number,
             });
         }

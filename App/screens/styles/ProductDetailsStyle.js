@@ -2,6 +2,15 @@ import styled from 'styled-components/native';
 import Color from '../../themes/Color';
 import Font from '../../themes/Font';
 
+export const Title = styled.Text`
+    color: ${Color.secundary};
+    font-family: ${Font.semibold};
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    text-align: center;
+`;
+
 export const Section = styled.SectionList`
     flex: 1;
 `;
