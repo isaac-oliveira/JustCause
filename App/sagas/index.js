@@ -3,6 +3,7 @@ import { all } from 'redux-saga/effects';
 import { loginRequest, logoutRequest } from './employee';
 import { loadTables } from './tables';
 import { loadCategories } from './categories';
+import { loadSubcategories } from './subcategories';
 import { loadProducts } from './products';
 
 function* sagas() {
@@ -11,6 +12,7 @@ function* sagas() {
         logoutRequest(),
         loadTables(),
         loadCategories(),
+        loadSubcategories(),
         loadProducts(),
     ]);
 }

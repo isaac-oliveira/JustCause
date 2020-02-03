@@ -11,15 +11,13 @@ import { ProductCreators } from '../store/reducers/products';
 import { leftZero } from '../util';
 
 export default function({ navigation }) {
-    //const { categoryId, number } = navigation.state.params;
+    const { categoryId, number } = navigation.state.params;
     const { loading, data, message } = useSelector(({ products }) => products);
     const dispatch = useDispatch();
 
     // useEffect(() => {
     //     dispatch(ProductCreators.getProducts(categoryId));
     // }, [categoryId, dispatch]);
-
-    const number = 1;
 
     const renderItem = ({ item }) => {
         const { id, nome } = item;

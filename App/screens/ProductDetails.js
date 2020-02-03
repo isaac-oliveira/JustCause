@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react';
-import { SectionList, Text } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Container } from './styles';
 import {
+    Section,
+    Horizontal,
+    Form,
+    Label,
+    Input,
     SectionHeader,
     Touchable,
     ContainerItem,
@@ -14,7 +18,9 @@ import {
 } from './styles/ProductDetailsStyle';
 
 import Toolbar from '../components/Toolbar';
+import Button from '../components/Button';
 import { SubcategoryCreators } from '../store/reducers/subcategories';
+import Color from '../themes/Color';
 
 export default function({ navigation }) {
     const { productId, productName, number } = navigation.state.params;
@@ -23,11 +29,11 @@ export default function({ navigation }) {
 
     useEffect(() => {
         dispatch(SubcategoryCreators.getSubcategories(productId));
-    });
+    }, [dispatch, productId]);
 
     const renderSectionHeader = ({ section }) => {
-        const { title } = section;
-        return <SectionHeader>{title}</SectionHeader>;
+        const { nome } = section;
+        return <SectionHeader>{nome}</SectionHeader>;
     };
 
     const renderSectionItem = ({ section, item, index }) => {
@@ -58,22 +64,33 @@ export default function({ navigation }) {
     return (
         <Container>
             <Toolbar title={productName} onBack={() => navigation.goBack()} />
-            <SectionList
+            <Section
                 sections={data}
                 keyExtractor={item => item.id}
                 renderSectionHeader={renderSectionHeader}
                 renderItem={renderSectionItem}
             />
+            <Horizontal>
+                <Form>
+                    <Label>Qtd: </Label>
+                    <Input defaultValue="01" />
+                </Form>
+                <Button
+                    title="Adicionar"
+                    background={Color.primary}
+                    onPress={() => navigation.navigate('Cart', { number })}
+                />
+            </Horizontal>
         </Container>
     );
 }
 
 function Item({ item, currentItem = null, isLast, onPress }) {
-    const { id, title, selected } = item;
+    const { id, nome, selected } = item;
     return (
         <Touchable onPress={onPress}>
             <ContainerItem>
-                <TitleItem>{title}</TitleItem>
+                <TitleItem>{nome}</TitleItem>
                 {currentItem && (
                     <ComboBoxItem checked={id === currentItem.id} />
                 )}

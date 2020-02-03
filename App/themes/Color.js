@@ -5,6 +5,7 @@ export default {
     cardEnabled: '#7BFF80',
     cardDisabled: '#FF7B7B',
     seat: '#EAEAEA',
+    groups: '#C4C4C4',
     textColor: '#898888',
     white: '#FFFFFF',
     black: '#000000',

@@ -63,6 +63,12 @@ async function getSubcategoryItens(subcategoryId) {
     return response;
 }
 
+async function getItens() {
+    const response = await api.get('/itens/1');
+
+    return response;
+}
+
 export default {
     login,
     getUser,
@@ -71,4 +77,5 @@ export default {
     getProducts,
     getSubcategories,
     getSubcategoryItens,
+    getItens,
 };

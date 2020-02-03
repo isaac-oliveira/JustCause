@@ -1,40 +1,6 @@
 const INITIAL_STATE = {
     loading: true,
-    data: [
-        {
-            id: '1',
-            title: 'Tamanho',
-            singleSelection: true,
-            currentItem: {},
-            data: [
-                {
-                    id: '1',
-                    title: 'Família',
-                },
-                {
-                    id: '2',
-                    title: 'Grande',
-                },
-            ],
-        },
-        {
-            id: '2',
-            title: 'Sabor',
-            singleSelection: false,
-            data: [
-                {
-                    id: '1',
-                    title: 'Frango',
-                    selected: false,
-                },
-                {
-                    id: '2',
-                    title: 'Calabresa',
-                    selected: false,
-                },
-            ],
-        },
-    ],
+    data: [],
     message: null,
 };
 

@@ -7,12 +7,6 @@ const INITIAL_STATE = {
             valor: '35',
             disponivel: true,
         },
-        {
-            id: 3,
-            nome: 'Pastel',
-            valor: '35',
-            disponivel: true,
-        },
     ],
     message: null,
 };
