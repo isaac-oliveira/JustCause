@@ -9,6 +9,7 @@ export const TableTypes = {
     GET_TABLES: 'GET_TABLES',
     TABLES_RECEIVED: 'TABLES_RECEIVED',
     TABLES_FAILED: 'TABLES_FAILED',
+    TABLE_TOGGLE: 'TABLE_TOGGLE',
 };
 
 //Creators
@@ -16,8 +17,13 @@ function getTables() {
     return { type: TableTypes.GET_TABLES };
 }
 
+function getTableToggle(table) {
+    return { type: TableTypes.TABLE_TOGGLE, payload: { table } };
+}
+
 export const TableCreators = {
     getTables,
+    getTableToggle,
 };
 
 //reducer

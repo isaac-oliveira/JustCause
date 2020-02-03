@@ -35,6 +35,14 @@ async function getTables() {
     return response;
 }
 
+async function toggleTable(table) {
+    const response = await api.put(`/mesa/${table.id}`, {
+        disponibilidade: !table.disponibilidade,
+    });
+
+    return response;
+}
+
 async function getCategories() {
     const response = await api.get('/categorias/1');
 
@@ -73,6 +81,7 @@ export default {
     login,
     getUser,
     getTables,
+    toggleTable,
     getCategories,
     getProducts,
     getSubcategories,
