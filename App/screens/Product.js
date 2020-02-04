@@ -1,52 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { SectionList } from 'react-native';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { Container } from './styles';
 
 import Toolbar from '../components/Toolbar';
+import List from '../components/List';
+import PhotoItem from '../components/PhotoItem';
+
+import { ProductCreators } from '../store/reducers/products';
 import { leftZero } from '../util';
 
-import {
-    Container,
-    HorizontalView,
-    InputQtd,
-    AddButton,
-    Form,
-    Label,
-    HeaderContainer,
-    HeaderTitle,
-    ItemContainer,
-    ItemTitle,
-    ComboBox,
-    Divider,
-} from './styles/ProductStyle';
-
-import JustCauseApi from '../services/JustCauseApi';
-import Color from '../themes/Color';
-
-import { group } from '../data';
-
 export default function({ navigation }) {
-    const { number } = navigation.state.params;
-    const [subcategories, setSubcategories] = useState([]);
+    const { categoryId, number } = navigation.state.params;
+    const { loading, data, message } = useSelector(({ products }) => products);
+    const dispatch = useDispatch();
 
-    useEffect(() => {
-        const response = JustCauseApi.getSubategories();
+    // useEffect(() => {
+    //     dispatch(ProductCreators.getProducts(categoryId));
+    // }, [categoryId, dispatch]);
 
-        console.log(response);
-        setSubcategories(group);
-    }, []);
-
-    function add() {
-        navigation.navigate('Cart', { number });
-    }
-
-    const renderSectionHeader = ({ section }) => (
-        <SectionHeader title={section.title} />
-    );
-
-    const renderItem = ({ index, section: { data }, item }) => {
-        const isLast = index == data.length - 1;
-
-        return <SectionItem isLast={isLast} item={item} />;
+    const renderItem = ({ item }) => {
+        const { id, nome } = item;
+        function onPress() {
+            navigation.navigate('ProductDetails', {
+                product: item,
+                number,
+            });
+        }
+        return <PhotoItem column={2} item={item} onPress={onPress} />;
     };
 
     return (
@@ -55,46 +36,15 @@ export default function({ navigation }) {
                 title={`Mesa ${leftZero(number)}`}
                 onBack={() => navigation.goBack(null)}
             />
-            <SectionList
-                style={{ flex: 1 }}
-                sections={subcategories}
-                renderSectionHeader={renderSectionHeader}
+            <List
+                style={{ alignSelf: 'center', flex: 1 }}
+                data={data}
+                loading={loading}
+                message={message}
+                keyExtractor={item => item.id}
                 renderItem={renderItem}
+                numColumns={2}
             />
-            <HorizontalView>
-                <Form>
-                    <Label>Qtd: </Label>
-                    <InputQtd
-                        defaultValue={leftZero(1)}
-                        keyboardType="number-pad"
-                    />
-                </Form>
-                <AddButton
-                    title="Adicionar"
-                    background={Color.primary}
-                    onPress={add}
-                />
-            </HorizontalView>
         </Container>
-    );
-}
-
-function SectionHeader({ title }) {
-    return (
-        <HeaderContainer>
-            <HeaderTitle>{title}</HeaderTitle>
-        </HeaderContainer>
-    );
-}
-
-function SectionItem({ isLast, item }) {
-    const { title, active } = item;
-
-    return (
-        <ItemContainer>
-            <ItemTitle>{title}</ItemTitle>
-            <ComboBox active={active} />
-            {!isLast && <Divider />}
-        </ItemContainer>
     );
 }

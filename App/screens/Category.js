@@ -1,16 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import {
-    Container,
-    CategoryContainer,
-    Photo,
-    Title,
-    Gradient,
-} from './styles/CategoryStyle';
+import { Container } from './styles';
 
 import Toolbar from '../components/Toolbar';
 import List from '../components/List';
+import PhotoItem from '../components/PhotoItem';
 
 import { CategoryCreators } from '../store/reducers/categories';
 import { leftZero } from '../util';
@@ -28,10 +23,12 @@ export default function({ navigation }) {
     }, [dispatch]);
 
     const renderItem = ({ item }) => {
+        const { id } = item;
+
         function onPress() {
-            navigation.navigate('Product', { number });
+            navigation.navigate('Product', { number, categoryId: id });
         }
-        return <CategoryItem item={item} onPress={onPress} />;
+        return <PhotoItem item={item} onPress={onPress} />;
     };
 
     return (
@@ -45,34 +42,12 @@ export default function({ navigation }) {
                 }
             />
             <List
-                style={{ padding: 5 }}
                 data={data}
                 loading={loading}
                 message={message}
-                keyExtractor={item => item.id}
+                keyExtractor={item => toString(item.id)}
                 renderItem={renderItem}
             />
         </Container>
-    );
-}
-
-function CategoryItem({ item, onPress }) {
-    const { nome } = item;
-
-    return (
-        <CategoryContainer onPress={onPress}>
-            <Photo source={require('../assets/pizza.jpg')} />
-            <Gradient
-                start={{ x: 0, y: 1.75 }}
-                end={{ x: 0.5, y: 1.0 }}
-                locations={[0, 0.7, 1]}
-                colors={[
-                    'rgba(0, 0, 0, .7)',
-                    'rgba(0, 0, 0, .5)',
-                    'rgba(0, 0, 0, .0)',
-                ]}
-            />
-            <Title>{nome}</Title>
-        </CategoryContainer>
     );
 }

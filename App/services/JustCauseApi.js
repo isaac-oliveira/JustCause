@@ -35,13 +35,44 @@ async function getTables() {
     return response;
 }
 
+async function toggleTable(table) {
+    const response = await api.put(`/mesa/${table.id}`, {
+        disponibilidade: !table.disponibilidade,
+    });
+
+    return response;
+}
+
 async function getCategories() {
     const response = await api.get('/categorias/1');
 
     return response;
 }
-async function getSubategories() {
-    const response = await api.get('/subcategorias/1');
+
+async function getProducts(categoryId) {
+    const response = await api.get(`/filtro/categoria/produtos/${categoryId}`);
+
+    return response;
+}
+
+async function getSubcategories(productId) {
+    const response = await api.get(
+        `/filtro/produto/subcategorias/${productId}`,
+    );
+
+    return response;
+}
+
+async function getSubcategoryItens(subcategoryId) {
+    const response = await api.get(
+        `/filtro/subcategoria/itens/${subcategoryId}`,
+    );
+
+    return response;
+}
+
+async function getItens() {
+    const response = await api.get('/itens/1');
 
     return response;
 }
@@ -50,6 +81,10 @@ export default {
     login,
     getUser,
     getTables,
+    toggleTable,
     getCategories,
-    getSubategories,
+    getProducts,
+    getSubcategories,
+    getSubcategoryItens,
+    getItens,
 };

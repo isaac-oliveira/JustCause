@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { Container } from './styles';
 import {
-    Container,
     TableContainer,
     SeatContainer,
     SeatTop,
@@ -31,10 +31,14 @@ export default function({ navigation }) {
     }, [dispatch]);
 
     function renderItem({ item }) {
-        const { number, disponibilidade } = item;
+        const { id, number, disponibilidade } = item;
 
         const onPress = () => {
             navigation.navigate('Request', { number });
+        };
+
+        const onToggle = () => {
+            dispatch(TableCreators.getTableToggle(item));
         };
 
         const onLongPress = () => {
@@ -47,6 +51,7 @@ export default function({ navigation }) {
                 {
                     title: disponibilidade ? 'Ocupar' : 'Desocupar',
                     icon: 'state',
+                    click: onToggle,
                 },
             ]);
             setVisible(true);
