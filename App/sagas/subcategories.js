@@ -6,30 +6,43 @@ import JustCauseApi from '../services/JustCauseApi';
 function* fetchSubcategories(action) {
     const { productId } = action.payload;
     const response = yield call(JustCauseApi.getSubcategories, productId);
-    const responseItens = yield call(JustCauseApi.getItens);
     if (response.ok) {
-        const data = response.data.map(function(item) {
+        const { data } = response;
+        const dataSubcategories = [];
+        // uso do for por conta do saga
+        for (let i = 0; i < data.length; i++) {
+            const item = data[i];
             const { id, nome, tipo } = item;
             const singleSelection = tipo === 'radio button';
-            let dataItem = responseItens.data.filter(
-                elem => id === elem.idSubcategoria,
+            const responseItens = yield call(
+                JustCauseApi.getSubcategoryItens,
+                id,
             );
+            let dataItem = responseItens.data;
             if (singleSelection) {
-                return {
+                dataSubcategories.push({
                     id,
                     nome,
                     singleSelection,
                     currentItem: {},
                     data: dataItem,
-                };
+                });
             } else {
                 dataItem = dataItem.map(elem => {
                     return { ...elem, selected: false };
                 });
-                return { id, nome, singleSelection, data: dataItem };
+                dataSubcategories.push({
+                    id,
+                    nome,
+                    singleSelection,
+                    data: dataItem,
+                });
             }
+        }
+        yield put({
+            type: SubcategoryTypes.SUBCATEGORIES_RECEIVED,
+            data: dataSubcategories,
         });
-        yield put({ type: SubcategoryTypes.SUBCATEGORIES_RECEIVED, data });
     } else {
         const { message } = response.data;
 
