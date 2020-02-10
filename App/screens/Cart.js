@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ToastAndroid } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Container, HorizontalView, CircleButton } from './styles/CartStyle';
 
@@ -7,20 +8,21 @@ import Toolbar from '../components/Toolbar';
 import List from '../components/List';
 import RequestItem from '../components/RequestItem';
 import Button from '../components/Button';
-
+import Dialog from '../components/Dialog';
+import { CartCreators } from '../store/reducers/cart'
 import Color from '../themes/Color';
-
 import { leftZero } from '../util';
 
-import { requestsItem } from '../data';
-import Dialog from '../components/Dialog';
-
 export default function({ navigation }) {
+    const cart = useSelector(({ cart }) => cart);
+    const dispatch = useDispatch()
+
     const { number } = navigation.state.params;
     const [visible, setVisible] = useState(false);
     const [itensDialog, setItensDialog] = useState([]);
 
     function sendToChicken() {
+        dispatch(CartCreators.sendToKitchen());
         navigation.navigate('Table');
         ToastAndroid.show('Enviado para a cozinha!', ToastAndroid.SHORT);
     }
@@ -32,7 +34,7 @@ export default function({ navigation }) {
         });
     }
 
-    function renderItem({ item }) {
+    function renderItem({ item, index }) {
         function onPress() {
             setItensDialog([
                 {
@@ -54,11 +56,14 @@ export default function({ navigation }) {
             ]);
             setVisible(true);
         }
+        const { observacao, valorUnidade } = item;
 
         return (
             <RequestItem
                 label="Item"
-                item={item}
+                number={index + 1}
+                info={observacao}
+                value={valorUnidade}
                 navigation={navigation}
                 onPress={onPress}
             />
@@ -77,7 +82,7 @@ export default function({ navigation }) {
                     width: '100%',
                     padding: 10,
                 }}
-                data={requestsItem}
+                data={cart}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
             />

@@ -22,6 +22,7 @@ import Toolbar from '../components/Toolbar';
 import Button from '../components/Button';
 import HeaderList from '../components/HeaderList';
 import { SubcategoryCreators } from '../store/reducers/subcategories';
+import { CartCreators } from '../store/reducers/cart';
 import Color from '../themes/Color';
 import { toMoney, leftZero } from '../util';
 
@@ -43,6 +44,38 @@ export default function({ navigation }) {
     useEffect(() => {
         setValue(valueUnit * count);
     }, [valueUnit, count]);
+
+    function addInCart() {
+        observacao = `${productName}: `;
+        valorUnidade = parseFloat(productValue);
+        data.map(function(item) {
+            const { singleSelection } = item;
+            if(singleSelection) {
+                const { currentItem } = item;
+                observacao += `${currentItem.nome}, `;
+                valorUnidade += parseFloat(currentItem.valor);
+            } else {
+                const { data: dataItem } = item;
+                dataItem.map(function(elem) {
+                    const { selected } = elem;
+                    if(selected) {
+                        const { nome, valor } = elem;
+                        observacao += `${nome}, `;
+                        valorUnidade += parseFloat(valor);
+                    }
+                });
+            }
+        });
+
+        dispatch(CartCreators.addInCart({
+            id: toString(data.length),
+            idProduto: productId,
+            quantidade: count,
+            valorUnidade,
+            observacao: observacao.slice(0, observacao.length - 2)
+        }));
+        navigation.navigate('Cart', { number });
+    }
 
     const renderValue = () => <Title>{toMoney(value)}</Title>;
 
@@ -112,6 +145,7 @@ export default function({ navigation }) {
                     <Label>Qtd: </Label>
                     <Input
                         defaultValue={`${count}`}
+                        keyboardType='numeric'
                         onChangeText={text => {
                             if (text.trim() !== '0' && text.trim() !== '') {
                                 setCount(parseInt(text));
@@ -122,7 +156,7 @@ export default function({ navigation }) {
                 <Button
                     title="Adicionar"
                     background={Color.primary}
-                    onPress={() => navigation.navigate('Cart', { number })}
+                    onPress={addInCart}
                 />
             </Horizontal>
         </Container>

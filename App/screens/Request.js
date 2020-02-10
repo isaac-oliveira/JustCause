@@ -32,11 +32,15 @@ export default function({ navigation }) {
         navigation.navigate('Category', { number });
     }
 
-    function renderItem({ item }) {
+    function renderItem({ item, index }) {
+        const { request, value } = item;
+
         return (
             <RequestItem
                 label="Pedido"
-                item={item}
+                number={index + 1}
+                info={request}
+                value={value}
                 onPress={() => navigation.navigate('Cart', { number })}
             />
         );
