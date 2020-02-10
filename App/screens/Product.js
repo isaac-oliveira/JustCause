@@ -15,14 +15,14 @@ export default function({ navigation }) {
     const { loading, data, message } = useSelector(({ products }) => products);
     const dispatch = useDispatch();
 
-    // useEffect(() => {
-    //     dispatch(ProductCreators.getProducts(categoryId));
-    // }, [categoryId, dispatch]);
+    useEffect(() => {
+        dispatch(ProductCreators.getProducts(categoryId));
+    }, [categoryId, dispatch]);
 
     const renderItem = ({ item }) => {
         const { id, nome } = item;
         function onPress() {
-            navigation.navigate('ProductDetails', {
+            navigation.navigate('Subcategory', {
                 product: item,
                 number,
             });
