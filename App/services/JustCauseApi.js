@@ -35,6 +35,12 @@ async function getTables() {
     return response;
 }
 
+async function getRequests(tableId) {
+    const response = await api.get(`/filtro/mesa/itensCarrinho/${tableId}`);
+
+    return response;
+}
+
 async function toggleTable(table) {
     const response = await api.put(`/mesa/${table.id}`, {
         disponibilidade: !table.disponibilidade,
@@ -44,7 +50,7 @@ async function toggleTable(table) {
 }
 
 async function getCategories() {
-    const response = await api.get('/categorias/1');
+    const response = await api.get('/categorias');
 
     return response;
 }
@@ -72,7 +78,17 @@ async function getSubcategoryItens(subcategoryId) {
 }
 
 async function getItens() {
-    const response = await api.get('/itens/1');
+    const response = await api.get('/itens');
+
+    return response;
+}
+
+async function sendToKitchen(mesa, montante, itens) {
+    const response = await api.post('/carrinho', {
+        mesa,
+        montante,
+        itens
+    });
 
     return response;
 }
@@ -82,9 +98,11 @@ export default {
     getUser,
     getTables,
     toggleTable,
+    getRequests,
     getCategories,
     getProducts,
     getSubcategories,
     getSubcategoryItens,
     getItens,
+    sendToKitchen
 };

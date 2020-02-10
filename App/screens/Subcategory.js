@@ -27,7 +27,7 @@ import Color from '../themes/Color';
 import { toMoney, leftZero } from '../util';
 
 export default function({ navigation }) {
-    const { product, number } = navigation.state.params;
+    const { product, table } = navigation.state.params;
     const { id: productId, nome: productName, valor: productValue } = product;
     const { loading, data, message } = useSelector(
         ({ subcategories }) => subcategories,
@@ -52,8 +52,10 @@ export default function({ navigation }) {
             const { singleSelection } = item;
             if(singleSelection) {
                 const { currentItem } = item;
-                observacao += `${currentItem.nome}, `;
-                valorUnidade += parseFloat(currentItem.valor);
+                if(currentItem.nome && currentItem.valor) {
+                    observacao += `${currentItem.nome}, `;
+                    valorUnidade += parseFloat(currentItem.valor);
+                }
             } else {
                 const { data: dataItem } = item;
                 dataItem.map(function(elem) {
@@ -74,7 +76,7 @@ export default function({ navigation }) {
             valorUnidade,
             observacao: observacao.slice(0, observacao.length - 2)
         }));
-        navigation.navigate('Cart', { number });
+        navigation.navigate('Cart', { table });
     }
 
     const renderValue = () => <Title>{toMoney(value)}</Title>;
@@ -91,12 +93,8 @@ export default function({ navigation }) {
             function onPress() {
                 if (currentItem.id !== item.id) {
                     let aux = valueUnit;
-                    if (currentItem.valor) {
-                        console.log('Diminuiu!');
+                    if (currentItem.valor)
                         aux -= parseFloat(currentItem.valor);
-                    } else {
-                        console.log('Not Diminuiu!');
-                    }
                     section.currentItem = item;
                     setValueUnit(aux + parseFloat(item.valor));
                 } else {

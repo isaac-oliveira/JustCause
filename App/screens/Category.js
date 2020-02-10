@@ -11,7 +11,7 @@ import { CategoryCreators } from '../store/reducers/categories';
 import { leftZero } from '../util';
 
 export default function({ navigation }) {
-    const { number, screenBack } = navigation.state.params;
+    const { table, screenBack } = navigation.state.params;
 
     const { loading, data, message } = useSelector(
         ({ categories }) => categories,
@@ -26,7 +26,7 @@ export default function({ navigation }) {
         const { id } = item;
 
         function onPress() {
-            navigation.navigate('Product', { number, categoryId: id });
+            navigation.navigate('Product', { table, categoryId: id });
         }
         return <PhotoItem item={item} onPress={onPress} />;
     };
@@ -34,10 +34,10 @@ export default function({ navigation }) {
     return (
         <Container>
             <Toolbar
-                title={`Mesa ${leftZero(number)}`}
+                title={`Mesa ${leftZero(table.number)}`}
                 onBack={() =>
                     navigation.navigate(screenBack ? screenBack : 'Request', {
-                        number,
+                        table,
                     })
                 }
             />

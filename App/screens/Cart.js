@@ -17,19 +17,19 @@ export default function({ navigation }) {
     const cart = useSelector(({ cart }) => cart);
     const dispatch = useDispatch()
 
-    const { number } = navigation.state.params;
+    const { table } = navigation.state.params;
     const [visible, setVisible] = useState(false);
     const [itensDialog, setItensDialog] = useState([]);
 
     function sendToChicken() {
-        dispatch(CartCreators.sendToKitchen());
-        navigation.navigate('Table');
         ToastAndroid.show('Enviado para a cozinha!', ToastAndroid.SHORT);
+        dispatch(CartCreators.sendToKitchen(table.id, cart));
+        navigation.navigate('Table');
     }
 
     function add() {
         navigation.navigate('Category', {
-            number,
+            table,
             screenBack: 'Cart',
         });
     }
@@ -42,7 +42,7 @@ export default function({ navigation }) {
                     icon: 'open',
                     click: () =>
                         navigation.navigate('Product', {
-                            number,
+                            table,
                         }),
                 },
                 {
@@ -73,7 +73,7 @@ export default function({ navigation }) {
     return (
         <Container>
             <Toolbar
-                title={`Mesa ${leftZero(number)}`}
+                title={`Mesa ${leftZero(table.number)}`}
                 content={<CircleButton icon="cart" disabled />}
                 onBack={() => navigation.navigate('Request')}
             />

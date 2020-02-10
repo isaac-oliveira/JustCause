@@ -13,9 +13,13 @@ function addInCart(item) {
     }
 }
 
-function sendToKitchen() {
+function sendToKitchen(mesaId, itens) {
     return {
         type: CartType.SEND_TO_KITCHEN,
+        payload: {
+            mesaId,
+            itens
+        }
     }
 }
 
@@ -27,7 +31,7 @@ export const CartCreators = {
 export default function(state = INITIAL_STATE, action) {
     switch(action.type) {
         case CartType.ADD_IN_CART:
-            return [...state, action.payload]
+            return [ ...state, action.payload ];
         case CartType.SEND_TO_KITCHEN_SUCESS:
             return []
         default:
