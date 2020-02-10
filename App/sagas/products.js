@@ -7,7 +7,6 @@ function* fetchProducts(action) {
     const { categoryId } = action.payload;
     const response = yield call(JustCauseApi.getProducts, categoryId);
     const { data } = response;
-    console.tron.log(data);
     if (response.ok) {
         yield put({ type: ProductTypes.PRODUCTS_RECEIVED, data });
     } else {

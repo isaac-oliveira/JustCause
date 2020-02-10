@@ -6,7 +6,6 @@ import JustCauseApi from '../services/JustCauseApi';
 function* fetchCategories(action) {
     const response = yield call(JustCauseApi.getCategories);
     const { data } = response;
-    console.tron.log(data);
     if (response.ok) {
         yield put({ type: CategoryTypes.CATEGORIES_RECEIVED, data });
     } else {

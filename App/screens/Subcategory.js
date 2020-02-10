@@ -20,6 +20,7 @@ import {
 
 import Toolbar from '../components/Toolbar';
 import Button from '../components/Button';
+import HeaderList from '../components/HeaderList';
 import { SubcategoryCreators } from '../store/reducers/subcategories';
 import Color from '../themes/Color';
 import { toMoney, leftZero } from '../util';
@@ -27,7 +28,9 @@ import { toMoney, leftZero } from '../util';
 export default function({ navigation }) {
     const { product, number } = navigation.state.params;
     const { id: productId, nome: productName, valor: productValue } = product;
-    const { data } = useSelector(({ subcategories }) => subcategories);
+    const { loading, data, message } = useSelector(
+        ({ subcategories }) => subcategories,
+    );
     const dispatch = useDispatch();
     const [count, setCount] = useState(1);
     const [valueUnit, setValueUnit] = useState(parseFloat(productValue));
@@ -97,9 +100,10 @@ export default function({ navigation }) {
                 content={renderValue()}
                 onBack={() => navigation.goBack()}
             />
-            <Section
+            <HeaderList
                 sections={data}
-                keyExtractor={item => item.id}
+                loading={loading}
+                message={message}
                 renderSectionHeader={renderSectionHeader}
                 renderItem={renderSectionItem}
             />
