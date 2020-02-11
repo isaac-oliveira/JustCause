@@ -5,6 +5,7 @@ import { loadTables, toggleTable } from './tables';
 import { loadCategories } from './categories';
 import { loadSubcategories } from './subcategories';
 import { loadProducts } from './products';
+import { sendToKitchen } from './cart';
 
 function* sagas() {
     yield all([
@@ -15,6 +16,7 @@ function* sagas() {
         loadCategories(),
         loadSubcategories(),
         loadProducts(),
+        sendToKitchen(),
     ]);
 }
 

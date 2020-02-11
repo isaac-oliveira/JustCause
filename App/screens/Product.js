@@ -11,7 +11,7 @@ import { ProductCreators } from '../store/reducers/products';
 import { leftZero } from '../util';
 
 export default function({ navigation }) {
-    const { categoryId, number } = navigation.state.params;
+    const { categoryId, table } = navigation.state.params;
     const { loading, data, message } = useSelector(({ products }) => products);
     const dispatch = useDispatch();
 
@@ -24,7 +24,7 @@ export default function({ navigation }) {
         function onPress() {
             navigation.navigate('Subcategory', {
                 product: item,
-                number,
+                table,
             });
         }
         return <PhotoItem column={2} item={item} onPress={onPress} />;
@@ -33,7 +33,7 @@ export default function({ navigation }) {
     return (
         <Container>
             <Toolbar
-                title={`Mesa ${leftZero(number)}`}
+                title={`Mesa ${leftZero(table.number)}`}
                 onBack={() => navigation.goBack(null)}
             />
             <List

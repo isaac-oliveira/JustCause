@@ -22,11 +22,12 @@ import Toolbar from '../components/Toolbar';
 import Button from '../components/Button';
 import HeaderList from '../components/HeaderList';
 import { SubcategoryCreators } from '../store/reducers/subcategories';
+import { CartCreators } from '../store/reducers/cart';
 import Color from '../themes/Color';
 import { toMoney, leftZero } from '../util';
 
 export default function({ navigation }) {
-    const { product, number } = navigation.state.params;
+    const { product, table } = navigation.state.params;
     const { id: productId, nome: productName, valor: productValue } = product;
     const { loading, data, message } = useSelector(
         ({ subcategories }) => subcategories,
@@ -44,6 +45,40 @@ export default function({ navigation }) {
         setValue(valueUnit * count);
     }, [valueUnit, count]);
 
+    function addInCart() {
+        observacao = `${productName}: `;
+        valorUnidade = parseFloat(productValue);
+        data.map(function(item) {
+            const { singleSelection } = item;
+            if(singleSelection) {
+                const { currentItem } = item;
+                if(currentItem.nome && currentItem.valor) {
+                    observacao += `${currentItem.nome}, `;
+                    valorUnidade += parseFloat(currentItem.valor);
+                }
+            } else {
+                const { data: dataItem } = item;
+                dataItem.map(function(elem) {
+                    const { selected } = elem;
+                    if(selected) {
+                        const { nome, valor } = elem;
+                        observacao += `${nome}, `;
+                        valorUnidade += parseFloat(valor);
+                    }
+                });
+            }
+        });
+
+        dispatch(CartCreators.addInCart({
+            id: toString(data.length),
+            idProduto: productId,
+            quantidade: count,
+            valorUnidade,
+            observacao: observacao.slice(0, observacao.length - 2)
+        }));
+        navigation.navigate('Cart', { table });
+    }
+
     const renderValue = () => <Title>{toMoney(value)}</Title>;
 
     const renderSectionHeader = ({ section }) => {
@@ -58,12 +93,8 @@ export default function({ navigation }) {
             function onPress() {
                 if (currentItem.id !== item.id) {
                     let aux = valueUnit;
-                    if (currentItem.valor) {
-                        console.log('Diminuiu!');
+                    if (currentItem.valor)
                         aux -= parseFloat(currentItem.valor);
-                    } else {
-                        console.log('Not Diminuiu!');
-                    }
                     section.currentItem = item;
                     setValueUnit(aux + parseFloat(item.valor));
                 } else {
@@ -112,6 +143,7 @@ export default function({ navigation }) {
                     <Label>Qtd: </Label>
                     <Input
                         defaultValue={`${count}`}
+                        keyboardType='numeric'
                         onChangeText={text => {
                             if (text.trim() !== '0' && text.trim() !== '') {
                                 setCount(parseInt(text));
@@ -122,7 +154,7 @@ export default function({ navigation }) {
                 <Button
                     title="Adicionar"
                     background={Color.primary}
-                    onPress={() => navigation.navigate('Cart', { number })}
+                    onPress={addInCart}
                 />
             </Horizontal>
         </Container>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ToastAndroid } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Container, HorizontalView, CircleButton } from './styles/CartStyle';
 
@@ -7,32 +8,33 @@ import Toolbar from '../components/Toolbar';
 import List from '../components/List';
 import RequestItem from '../components/RequestItem';
 import Button from '../components/Button';
-
+import Dialog from '../components/Dialog';
+import { CartCreators } from '../store/reducers/cart'
 import Color from '../themes/Color';
-
 import { leftZero } from '../util';
 
-import { requestsItem } from '../data';
-import Dialog from '../components/Dialog';
-
 export default function({ navigation }) {
-    const { number } = navigation.state.params;
+    const cart = useSelector(({ cart }) => cart);
+    const dispatch = useDispatch()
+
+    const { table } = navigation.state.params;
     const [visible, setVisible] = useState(false);
     const [itensDialog, setItensDialog] = useState([]);
 
     function sendToChicken() {
-        navigation.navigate('Table');
         ToastAndroid.show('Enviado para a cozinha!', ToastAndroid.SHORT);
+        dispatch(CartCreators.sendToKitchen(table.id, cart));
+        navigation.navigate('Table');
     }
 
     function add() {
         navigation.navigate('Category', {
-            number,
+            table,
             screenBack: 'Cart',
         });
     }
 
-    function renderItem({ item }) {
+    function renderItem({ item, index }) {
         function onPress() {
             setItensDialog([
                 {
@@ -40,7 +42,7 @@ export default function({ navigation }) {
                     icon: 'open',
                     click: () =>
                         navigation.navigate('Product', {
-                            number,
+                            table,
                         }),
                 },
                 {
@@ -54,11 +56,14 @@ export default function({ navigation }) {
             ]);
             setVisible(true);
         }
+        const { observacao, valorUnidade } = item;
 
         return (
             <RequestItem
                 label="Item"
-                item={item}
+                number={index + 1}
+                info={observacao}
+                value={valorUnidade}
                 navigation={navigation}
                 onPress={onPress}
             />
@@ -68,7 +73,7 @@ export default function({ navigation }) {
     return (
         <Container>
             <Toolbar
-                title={`Mesa ${leftZero(number)}`}
+                title={`Mesa ${leftZero(table.number)}`}
                 content={<CircleButton icon="cart" disabled />}
                 onBack={() => navigation.navigate('Request')}
             />
@@ -77,7 +82,7 @@ export default function({ navigation }) {
                     width: '100%',
                     padding: 10,
                 }}
-                data={requestsItem}
+                data={cart}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
             />

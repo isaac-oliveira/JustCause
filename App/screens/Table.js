@@ -31,10 +31,10 @@ export default function({ navigation }) {
     }, [dispatch]);
 
     function renderItem({ item }) {
-        const { id, number, disponibilidade } = item;
+        const { disponibilidade } = item;
 
         const onPress = () => {
-            navigation.navigate('Request', { number });
+            navigation.navigate('Request', { table: item });
         };
 
         const onToggle = () => {

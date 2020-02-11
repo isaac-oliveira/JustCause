@@ -11,8 +11,7 @@ import {
 
 import { leftZero } from '../util';
 
-export default function({ label, item, onPress }) {
-    const { number, request, value } = item;
+export default function({ number, label, info, value, onPress }) {
     return (
         <Container onPress={onPress}>
             <VerticalView>
@@ -20,8 +19,8 @@ export default function({ label, item, onPress }) {
                 <Number>{leftZero(number)}</Number>
             </VerticalView>
             <InfoView>
-                <Info>{request}</Info>
-                <Info>R$ {`${value.toFixed(2)}`.replace('.', ',')}</Info>
+                <Info>{info}</Info>
+                <Info>R$ {`${parseFloat(value).toFixed(2)}`.replace('.', ',')}</Info>
             </InfoView>
         </Container>
     );

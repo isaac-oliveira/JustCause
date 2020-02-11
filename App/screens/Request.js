@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
 
 import { Container } from './styles';
 import {
@@ -14,30 +14,41 @@ import {
 import Toolbar from '../components/Toolbar';
 import List from '../components/List';
 import RequestItem from '../components/RequestItem';
-
+import JustCauseApi from '../services/JustCauseApi';
 import Color from '../themes/Color';
 
 import { leftZero, isEmpty } from '../util';
 
-import { requests } from '../data';
-
 export default function({ navigation }) {
-    const { number } = navigation.state.params;
+    const { table } = navigation.state.params;
+    const [requests, setRequets] = useState([]);
+    useEffect(() => {
+        async function load() {
+            const response = await JustCauseApi.getRequests(table.id);
+            if(response.ok)
+                setRequets(response.data[0]);
+        }
+        load();
+    }, []);
 
     function closeCount() {
         navigation.navigate('Table');
     }
 
     function add() {
-        navigation.navigate('Category', { number });
+        navigation.navigate('Category', { table });
     }
 
-    function renderItem({ item }) {
+    function renderItem({ item, index }) {
+        const { observacao, valorUnidade } = item;
+        
         return (
             <RequestItem
                 label="Pedido"
-                item={item}
-                onPress={() => navigation.navigate('Cart', { number })}
+                number={index + 1}
+                info={observacao}
+                value={valorUnidade}
+                onPress={() => navigation.navigate('Cart', { table })}
             />
         );
     }
@@ -45,7 +56,7 @@ export default function({ navigation }) {
     return (
         <Container>
             <Toolbar
-                title={`Mesa ${leftZero(number)}`}
+                title={`Mesa ${leftZero(table.number)}`}
                 onBack={() => navigation.goBack(null)}
             />
             <List
