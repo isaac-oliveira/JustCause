@@ -22,7 +22,7 @@ import Color from '../themes/Color';
 import { leftZero } from '../util';
 
 export default function({ navigation }) {
-    const cart = useSelector(({ cart }) => cart);
+    const { data } = useSelector(({ cart }) => cart);
     const dispatch = useDispatch()
 
     const { table, item } = navigation.state.params;
@@ -31,7 +31,7 @@ export default function({ navigation }) {
 
     function sendToChicken() {
         ToastAndroid.show('Enviado para a cozinha!', ToastAndroid.SHORT);
-        dispatch(CartCreators.sendToKitchen(table.id, cart));
+        dispatch(CartCreators.sendToKitchen(table.id, data));
         navigation.navigate('Table');
     }
 
@@ -49,8 +49,9 @@ export default function({ navigation }) {
                     title: 'Abrir',
                     icon: 'open',
                     click: () =>
-                        navigation.navigate('Product', {
+                        navigation.navigate('Item', {
                             table,
+                            item: { ...item, index }
                         }),
                 },
                 {
@@ -90,7 +91,7 @@ export default function({ navigation }) {
                     width: '100%',
                     padding: 10,
                 }}
-                data={item ? item : cart}
+                data={item ? item : data}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
             />

@@ -23,17 +23,20 @@ import List from '../components/List';
 import JustCauseApi from '../services/JustCauseApi';
 import Color from '../themes/Color';
 
-import { leftZero, isEmpty, toMoney } from '../util';
+import { leftZero, isEmpty, toMoney, getColorStatus } from '../util';
 
 export default function({ navigation }) {
     const { table } = navigation.state.params;
     const [requests, setRequets] = useState([]);
     const [requestsApi, setRequetsApi] = useState([]);
+    const [total, setTotal] = useState(0);
+
     useEffect(() => {
         async function load() {
             const response = await JustCauseApi.getRequests(table.id);
             if(response.ok) {
                 setRequetsApi(response.data);
+                let aux = 0;
                 const data = response.data.map(function(item, index) {
                     let countOk = 0;
                     let status = 'enviado para cozinha';
@@ -48,7 +51,9 @@ export default function({ navigation }) {
                     }
                     if(countOk != 0)
                         status = countOk == item.lenght ? 'pronto' : 'preparando';
-                    info = info.slice(0, info.length - 2)
+                    info = info.slice(0, info.length - 2);
+                    aux += value;
+
                     return {
                         id: index,
                         info,
@@ -56,6 +61,8 @@ export default function({ navigation }) {
                         status
                     };
                 });
+
+                setTotal(aux);
                 setRequets(data);
             }
         }
@@ -70,16 +77,19 @@ export default function({ navigation }) {
         navigation.navigate('Category', { table });
     }
 
+    
+
     function renderItem({ item, index }) {
-        const { id, info, value } = item;
+        const { id, info, value, status } = item;
         
         return (
             <RequestItem
-                key={id}
+                key={`${id}`}
                 label="Pedido"
                 number={index + 1}
                 info={info}
                 value={value}
+                statusColor={getColorStatus(status)}
                 onPress={() => navigation.navigate('Cart', { table, item: requestsApi[id] })}
             />
         );
@@ -103,7 +113,7 @@ export default function({ navigation }) {
                     <VerticalView>
                         <Total>
                             <Label>TOTAL: </Label>
-                            <Value>R$ 80,00</Value>
+                            <Value>{toMoney(total)}</Value>
                         </Total>
                         <CloseButton
                             title="Fechar a Conta"
@@ -118,10 +128,10 @@ export default function({ navigation }) {
     );
 }
 
-function RequestItem({ number, info, value, onPress }) {
+function RequestItem({ number, info, value, statusColor, onPress }) {
     return (
         <ItemContainer onPress={onPress}>
-            <Status />
+            <Status color={statusColor} />
             <VerticalContainer>
                 <LabelItem>Pedido</LabelItem>
                 <NumberItem>{leftZero(number)}</NumberItem>

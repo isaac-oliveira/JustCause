@@ -70,7 +70,7 @@ export const ItemContainer = styled.TouchableOpacity`
 export const Status = styled.View`
     width: 5px;
     margin-right: 2px;
-    background-color: #EBFF06;
+    ${({ color }) => color ? `background-color: ${color};` :  ''}
 `;
 
 export const VerticalContainer = styled.View`

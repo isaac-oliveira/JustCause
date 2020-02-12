@@ -12,12 +12,12 @@ export const ContainerItem = styled.TouchableOpacity`
     margin: ${margin}px;
     background-color: #aaa;
     border-radius: 8px;
-    elevation: 8px;
+    elevation: 10px;
 `;
 
 export const Photo = styled.Image`
     width: ${({ column }) => width / column - margin * 2 * column};
-    height: 100px;
+    height: ${({ height }) => height ? height : 100 }px;
     border-radius: 8px;
 `;
 
