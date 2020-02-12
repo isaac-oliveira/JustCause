@@ -9,24 +9,55 @@ import {
     Value,
     CloseButton,
     CircleButton,
+    ItemContainer,
+    Status,
+    VerticalContainer,
+    LabelItem,
+    NumberItem,
+    InfoContainer,
+    TextItem
 } from './styles/RequestStyle';
 
 import Toolbar from '../components/Toolbar';
 import List from '../components/List';
-import RequestItem from '../components/RequestItem';
 import JustCauseApi from '../services/JustCauseApi';
 import Color from '../themes/Color';
 
-import { leftZero, isEmpty } from '../util';
+import { leftZero, isEmpty, toMoney } from '../util';
 
 export default function({ navigation }) {
     const { table } = navigation.state.params;
     const [requests, setRequets] = useState([]);
+    const [requestsApi, setRequetsApi] = useState([]);
     useEffect(() => {
         async function load() {
             const response = await JustCauseApi.getRequests(table.id);
-            if(response.ok)
-                setRequets(response.data[0]);
+            if(response.ok) {
+                setRequetsApi(response.data);
+                const data = response.data.map(function(item, index) {
+                    let countOk = 0;
+                    let status = 'enviado para cozinha';
+                    let info = '';
+                    let value = 0;
+                    for(let i = 0; i < item.length; i++) {
+                        const { observacao, montante, status } = item[i];
+                        info += `${observacao.split(':')[0]}, `;
+                        value += parseFloat(montante);
+                        if(status == 'Pronto') 
+                            count++;
+                    }
+                    if(countOk != 0)
+                        status = countOk == item.lenght ? 'pronto' : 'preparando';
+                    info = info.slice(0, info.length - 2)
+                    return {
+                        id: index,
+                        info,
+                        value,
+                        status
+                    };
+                });
+                setRequets(data);
+            }
         }
         load();
     }, []);
@@ -40,15 +71,16 @@ export default function({ navigation }) {
     }
 
     function renderItem({ item, index }) {
-        const { observacao, valorUnidade } = item;
+        const { id, info, value } = item;
         
         return (
             <RequestItem
+                key={id}
                 label="Pedido"
                 number={index + 1}
-                info={observacao}
-                value={valorUnidade}
-                onPress={() => navigation.navigate('Cart', { table })}
+                info={info}
+                value={value}
+                onPress={() => navigation.navigate('Cart', { table, item: requestsApi[id] })}
             />
         );
     }
@@ -83,5 +115,21 @@ export default function({ navigation }) {
                 )}
             </HorizontalView>
         </Container>
+    );
+}
+
+function RequestItem({ number, info, value, onPress }) {
+    return (
+        <ItemContainer onPress={onPress}>
+            <Status />
+            <VerticalContainer>
+                <LabelItem>Pedido</LabelItem>
+                <NumberItem>{leftZero(number)}</NumberItem>
+            </VerticalContainer>
+            <InfoContainer>
+                <TextItem>{info}</TextItem>
+                <TextItem>{toMoney(value)}</TextItem>
+            </InfoContainer>
+        </ItemContainer>
     );
 }
