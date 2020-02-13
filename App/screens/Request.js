@@ -138,7 +138,6 @@ export default function({ navigation }) {
 }
 
 function RequestItem({ number, info, value, statusColor, onPress }) {
-    console.log(info.length);
     return (
         <ItemContainer onPress={onPress}>
             <Status color={statusColor} />
