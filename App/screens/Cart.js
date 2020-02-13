@@ -2,11 +2,19 @@ import React, { useState } from 'react';
 import { ToastAndroid } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Container, HorizontalView, CircleButton } from './styles/CartStyle';
+import { 
+    Container, 
+    HorizontalView, 
+    CircleButton, 
+    ItemContainer,
+    VerticalView,
+    Label,
+    Number,
+    Info,
+    InfoView } from './styles/CartStyle';
 
 import Toolbar from '../components/Toolbar';
 import List from '../components/List';
-import RequestItem from '../components/RequestItem';
 import Button from '../components/Button';
 import Dialog from '../components/Dialog';
 import { CartCreators } from '../store/reducers/cart'
@@ -14,16 +22,16 @@ import Color from '../themes/Color';
 import { leftZero } from '../util';
 
 export default function({ navigation }) {
-    const cart = useSelector(({ cart }) => cart);
+    const { data } = useSelector(({ cart }) => cart);
     const dispatch = useDispatch()
 
-    const { table } = navigation.state.params;
+    const { table, item } = navigation.state.params;
     const [visible, setVisible] = useState(false);
     const [itensDialog, setItensDialog] = useState([]);
 
     function sendToChicken() {
         ToastAndroid.show('Enviado para a cozinha!', ToastAndroid.SHORT);
-        dispatch(CartCreators.sendToKitchen(table.id, cart));
+        dispatch(CartCreators.sendToKitchen(table.id, data));
         navigation.navigate('Table');
     }
 
@@ -41,8 +49,9 @@ export default function({ navigation }) {
                     title: 'Abrir',
                     icon: 'open',
                     click: () =>
-                        navigation.navigate('Product', {
+                        navigation.navigate('Item', {
                             table,
+                            item: { ...item, index }
                         }),
                 },
                 {
@@ -59,7 +68,7 @@ export default function({ navigation }) {
         const { observacao, valorUnidade } = item;
 
         return (
-            <RequestItem
+            <CartItem
                 label="Item"
                 number={index + 1}
                 info={observacao}
@@ -82,24 +91,41 @@ export default function({ navigation }) {
                     width: '100%',
                     padding: 10,
                 }}
-                data={cart}
+                data={item ? item : data}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
             />
-            <HorizontalView>
-                <Button
-                    title="Enviar para cozinha"
-                    background={Color.white}
-                    elevation={3}
-                    onPress={sendToChicken}
-                />
-                <CircleButton icon="add" size={18} onPress={add} />
-            </HorizontalView>
+            { !item &&
+                <HorizontalView>
+                    <Button
+                        title="Enviar para cozinha"
+                        background={Color.white}
+                        elevation={3}
+                        onPress={sendToChicken}
+                    />
+                    <CircleButton icon="add" size={18} onPress={add} />
+                </HorizontalView>
+            }
             <Dialog
                 visible={visible}
                 itens={itensDialog}
                 onRequestClose={() => setVisible(false)}
             />
         </Container>
+    );
+}
+
+function CartItem({ number, label, info, value, onPress }) {
+    return (
+        <ItemContainer onPress={onPress}>
+            <VerticalView>
+                <Label>{label}</Label>
+                <Number>{leftZero(number)}</Number>
+            </VerticalView>
+            <InfoView>
+                <Info>{info}</Info>
+                <Info>R$ {`${parseFloat(value).toFixed(2)}`.replace('.', ',')}</Info>
+            </InfoView>
+        </ItemContainer>
     );
 }
