@@ -4,6 +4,7 @@ export default {
     background: '#E2E2E2',
     cardEnabled: '#7BFF80',
     cardDisabled: '#FF7B7B',
+    prepared: '#EBFF06',
     seat: '#EAEAEA',
     groups: '#C4C4C4',
     textColor: '#898888',

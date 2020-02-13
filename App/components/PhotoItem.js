@@ -2,12 +2,16 @@ import React from 'react';
 
 import { ContainerItem, Photo, Title, Gradient } from './styles/PhotoItemStyle';
 
-export default function({ column = 1, item, onPress }) {
-    const { id, nome } = item;
+export default function({ height, column = 1, item, onPress }) {
+    const { nome } = item;
 
     return (
         <ContainerItem onPress={onPress}>
-            <Photo source={require('../assets/pizza.jpg')} column={column} />
+            <Photo
+                height={height}
+                source={require('../assets/pizza.jpg')}
+                column={column}
+            />
             <Gradient
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 0 }}

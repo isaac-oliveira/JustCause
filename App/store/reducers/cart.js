@@ -1,4 +1,7 @@
-const INITIAL_STATE = [];
+const INITIAL_STATE = {
+    lastId: 0,
+    data: [],
+};
 
 export const CartType = {
     ADD_IN_CART: 'ADD_IN_CART',
@@ -31,9 +34,12 @@ export const CartCreators = {
 export default function(state = INITIAL_STATE, action) {
     switch (action.type) {
         case CartType.ADD_IN_CART:
-            return [...state, action.payload];
+            return {
+                lastId: state.lastId + 1,
+                data: [...state.data, action.payload],
+            };
         case CartType.SEND_TO_KITCHEN_SUCESS:
-            return [];
+            return { ...state, data: [] };
         default:
             return state;
     }

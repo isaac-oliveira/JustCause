@@ -8,6 +8,7 @@ import Category from '../screens/Category';
 import Product from '../screens/Product';
 import Subcategory from '../screens/Subcategory';
 import Cart from '../screens/Cart';
+import Item from '../screens/Item';
 
 const StackNavigator = createStackNavigator(
     {
@@ -18,6 +19,7 @@ const StackNavigator = createStackNavigator(
         Product: { screen: Product },
         Subcategory: { screen: Subcategory },
         Cart: { screen: Cart },
+        Item: { screen: Item },
     },
     {
         initialRouteName: 'Home',

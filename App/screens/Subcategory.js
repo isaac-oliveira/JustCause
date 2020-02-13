@@ -32,6 +32,7 @@ export default function({ navigation }) {
     const { loading, data, message } = useSelector(
         ({ subcategories }) => subcategories,
     );
+    const { lastId } = useSelector(({ cart }) => cart);
     const dispatch = useDispatch();
     const [count, setCount] = useState(1);
     const [valueUnit, setValueUnit] = useState(parseFloat(productValue));
@@ -71,7 +72,7 @@ export default function({ navigation }) {
 
         dispatch(
             CartCreators.addInCart({
-                id: toString(data.length),
+                id: toString(lastId),
                 idProduto: productId,
                 quantidade: count,
                 valorUnidade,
@@ -155,6 +156,7 @@ export default function({ navigation }) {
                     />
                 </Form>
                 <Button
+                    style={{ width: '35%' }}
                     title="Adicionar"
                     background={Color.primary}
                     onPress={addInCart}
