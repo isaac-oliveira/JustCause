@@ -9,13 +9,13 @@ import List from '../components/List';
 import RequestItem from '../components/RequestItem';
 import Button from '../components/Button';
 import Dialog from '../components/Dialog';
-import { CartCreators } from '../store/reducers/cart'
+import { CartCreators } from '../store/reducers/cart';
 import Color from '../themes/Color';
 import { leftZero } from '../util';
 
 export default function({ navigation }) {
     const cart = useSelector(({ cart }) => cart);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const { table } = navigation.state.params;
     const [visible, setVisible] = useState(false);

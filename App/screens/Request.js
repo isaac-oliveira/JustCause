@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Container } from './styles';
 import {
@@ -25,11 +25,12 @@ export default function({ navigation }) {
     useEffect(() => {
         async function load() {
             const response = await JustCauseApi.getRequests(table.id);
-            if(response.ok)
+            if (response.ok) {
                 setRequets(response.data[0]);
+            }
         }
         load();
-    }, []);
+    }, [table.id]);
 
     function closeCount() {
         navigation.navigate('Table');
@@ -41,7 +42,7 @@ export default function({ navigation }) {
 
     function renderItem({ item, index }) {
         const { observacao, valorUnidade } = item;
-        
+
         return (
             <RequestItem
                 label="Pedido"

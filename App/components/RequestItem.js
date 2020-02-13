@@ -20,7 +20,9 @@ export default function({ number, label, info, value, onPress }) {
             </VerticalView>
             <InfoView>
                 <Info>{info}</Info>
-                <Info>R$ {`${parseFloat(value).toFixed(2)}`.replace('.', ',')}</Info>
+                <Info>
+                    R$ {`${parseFloat(value).toFixed(2)}`.replace('.', ',')}
+                </Info>
             </InfoView>
         </Container>
     );
