@@ -38,19 +38,22 @@ export default function({ navigation }) {
                 setRequetsApi(response.data);
                 let aux = 0;
                 const data = response.data.map(function(item, index) {
-                    let countOk = 0;
-                    let status = 'enviado para cozinha';
+                    let checkedStatus = 0;
+                    let statusRequest = 'enviado para cozinha';
                     let info = '';
                     let value = 0;
                     for(let i = 0; i < item.length; i++) {
                         const { observacao, montante, status } = item[i];
                         info += `${observacao.split(':')[0]}, `;
                         value += parseFloat(montante);
-                        if(status == 'Pronto') 
-                            count++;
+                        if(status === 'pronto' && checkedStatus != 1) 
+                            checkedStatus = 2;
+                        if(status === 'preparando')
+                            checkedStatus = 1;
+                        
                     }
-                    if(countOk != 0)
-                        status = countOk == item.lenght ? 'pronto' : 'preparando';
+                    if(checkedStatus != 0)
+                        statusRequest = checkedStatus === 2 ? 'pronto' : 'preparando';
                     info = info.slice(0, info.length - 2);
                     aux += value;
 
@@ -58,7 +61,7 @@ export default function({ navigation }) {
                         id: index,
                         info,
                         value,
-                        status
+                        status: statusRequest
                     };
                 });
 
