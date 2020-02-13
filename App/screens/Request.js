@@ -138,6 +138,7 @@ export default function({ navigation }) {
 }
 
 function RequestItem({ number, info, value, statusColor, onPress }) {
+    console.log(info.length);
     return (
         <ItemContainer onPress={onPress}>
             <Status color={statusColor} />
@@ -146,7 +147,9 @@ function RequestItem({ number, info, value, statusColor, onPress }) {
                 <NumberItem>{leftZero(number)}</NumberItem>
             </VerticalContainer>
             <InfoContainer>
-                <TextItem>{info}</TextItem>
+                <TextItem>
+                    {info.length > 20 ? info.slice(0, 20) + '...' : info}
+                </TextItem>
                 <TextItem>{toMoney(value)}</TextItem>
             </InfoContainer>
         </ItemContainer>

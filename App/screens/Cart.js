@@ -124,7 +124,9 @@ function CartItem({ number, label, info, value, onPress }) {
                 <Number>{leftZero(number)}</Number>
             </VerticalView>
             <InfoView>
-                <Info>{info}</Info>
+                <Info>
+                    {info.length > 20 ? info.slice(0, 20) + '...' : info}
+                </Info>
                 <Info>
                     R$ {`${parseFloat(value).toFixed(2)}`.replace('.', ',')}
                 </Info>
