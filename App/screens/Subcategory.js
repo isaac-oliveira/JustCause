@@ -79,7 +79,7 @@ export default function({ navigation }) {
                 observacao: observacao.slice(0, observacao.length - 2),
             }),
         );
-        navigation.navigate('Cart', { table });
+        navigation.navigate('Cart', { table, screenBack: 'Subcategory' });
     }
 
     const renderValue = () => <Title>{toMoney(value)}</Title>;

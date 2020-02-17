@@ -26,43 +26,44 @@ export const ItemContainer = styled.TouchableOpacity`
     flex: 1;
     flex-direction: row;
     background-color: ${Color.white};
+    border-radius: 8px;
     margin: 5px;
-    padding: 10px 15px 5px 15px;
-    border-radius: 12px;
-    elevation: 8px;
-    justify-content: center;
-    align-items: center;
+    padding: 5px;
+    elevation: 5px;
 `;
 
-export const VerticalView = styled.View`
-    justify-content: center;
-    align-items: center;
+export const Status = styled.View`
+    width: 5px;
+    margin-right: 2px;
+    ${({ color }) => (color ? `background-color: ${color};` : '')}
 `;
 
-export const Label = styled.Text`
+export const VerticalContainer = styled.View`
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+`;
+
+export const LabelItem = styled.Text`
     font-family: ${Font.semibold};
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
-    line-height: 13px;
+    line-height: 14px;
     text-align: center;
-    letter-spacing: 0.1px;
     color: ${Color.secundary};
 `;
 
-export const Number = styled.Text`
-    font-family: ${Font.semibold};
-    font-style: normal;
+export const NumberItem = styled(LabelItem)`
     font-size: 28px;
-    font-weight: 600;
     line-height: 28px;
-    text-align: center;
-    letter-spacing: 0.1px;
-    color: ${Color.secundary};
 `;
 
-export const InfoView = styled(VerticalView)`
-    flex: 1;
+export const InfoView = styled(VerticalContainer)`
+    position: absolute;
+    align-self: center;
+    left: 0;
+    right: 0;
 `;
 
 export const Info = styled.Text`
@@ -75,4 +76,3 @@ export const Info = styled.Text`
     letter-spacing: 0.1px;
     color: ${Color.textColor};
 `;
-

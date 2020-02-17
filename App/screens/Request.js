@@ -38,7 +38,7 @@ export default function({ navigation }) {
                 setRequetsApi(response.data);
                 let aux = 0;
                 const data = response.data.map(function(item, index) {
-                    let checkedStatus = 0;
+                    let checkedStatus = 2;
                     let statusRequest = 'enviado para cozinha';
                     let info = '';
                     let value = 0;
@@ -46,14 +46,17 @@ export default function({ navigation }) {
                         const { observacao, montante, status } = item[i];
                         info += `${observacao.split(':')[0]}, `;
                         value += parseFloat(montante);
-                        if (status === 'pronto' && checkedStatus != 1) {
-                            checkedStatus = 2;
+                        if (
+                            status === 'enviado para cozinha' &&
+                            checkedStatus !== 1
+                        ) {
+                            checkedStatus = 0;
                         }
                         if (status === 'preparando') {
                             checkedStatus = 1;
                         }
                     }
-                    if (checkedStatus != 0) {
+                    if (checkedStatus !== 0) {
                         statusRequest =
                             checkedStatus === 2 ? 'pronto' : 'preparando';
                     }
@@ -97,7 +100,8 @@ export default function({ navigation }) {
                 onPress={() =>
                     navigation.navigate('Cart', {
                         table,
-                        item: requestsApi[id],
+                        itemRequests: requestsApi[id],
+                        screenBack: 'Request',
                     })
                 }
             />
