@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Container } from './styles';
 import {
@@ -15,7 +15,7 @@ import {
     LabelItem,
     NumberItem,
     InfoContainer,
-    TextItem
+    TextItem,
 } from './styles/RequestStyle';
 
 import Toolbar from '../components/Toolbar';
@@ -34,26 +34,32 @@ export default function({ navigation }) {
     useEffect(() => {
         async function load() {
             const response = await JustCauseApi.getRequests(table.id);
-            if(response.ok) {
+            if (response.ok) {
                 setRequetsApi(response.data);
                 let aux = 0;
                 const data = response.data.map(function(item, index) {
-                    let checkedStatus = 0;
+                    let checkedStatus = 2;
                     let statusRequest = 'enviado para cozinha';
                     let info = '';
                     let value = 0;
-                    for(let i = 0; i < item.length; i++) {
+                    for (let i = 0; i < item.length; i++) {
                         const { observacao, montante, status } = item[i];
                         info += `${observacao.split(':')[0]}, `;
                         value += parseFloat(montante);
-                        if(status === 'pronto' && checkedStatus != 1) 
-                            checkedStatus = 2;
-                        if(status === 'preparando')
+                        if (
+                            status === 'enviado para cozinha' &&
+                            checkedStatus !== 1
+                        ) {
+                            checkedStatus = 0;
+                        }
+                        if (status === 'preparando') {
                             checkedStatus = 1;
-                        
+                        }
                     }
-                    if(checkedStatus != 0)
-                        statusRequest = checkedStatus === 2 ? 'pronto' : 'preparando';
+                    if (checkedStatus !== 0) {
+                        statusRequest =
+                            checkedStatus === 2 ? 'pronto' : 'preparando';
+                    }
                     info = info.slice(0, info.length - 2);
                     aux += value;
 
@@ -61,7 +67,7 @@ export default function({ navigation }) {
                         id: index,
                         info,
                         value,
-                        status: statusRequest
+                        status: statusRequest,
                     };
                 });
 
@@ -70,7 +76,7 @@ export default function({ navigation }) {
             }
         }
         load();
-    }, []);
+    }, [table.id]);
 
     function closeCount() {
         navigation.navigate('Table');
@@ -80,11 +86,9 @@ export default function({ navigation }) {
         navigation.navigate('Category', { table });
     }
 
-    
-
     function renderItem({ item, index }) {
         const { id, info, value, status } = item;
-        
+
         return (
             <RequestItem
                 key={`${id}`}
@@ -93,7 +97,13 @@ export default function({ navigation }) {
                 info={info}
                 value={value}
                 statusColor={getColorStatus(status)}
-                onPress={() => navigation.navigate('Cart', { table, item: requestsApi[id] })}
+                onPress={() =>
+                    navigation.navigate('Cart', {
+                        table,
+                        itemRequests: requestsApi[id],
+                        screenBack: 'Request',
+                    })
+                }
             />
         );
     }
@@ -140,7 +150,9 @@ function RequestItem({ number, info, value, statusColor, onPress }) {
                 <NumberItem>{leftZero(number)}</NumberItem>
             </VerticalContainer>
             <InfoContainer>
-                <TextItem>{info}</TextItem>
+                <TextItem>
+                    {info.length > 20 ? info.slice(0, 20) + '...' : info}
+                </TextItem>
                 <TextItem>{toMoney(value)}</TextItem>
             </InfoContainer>
         </ItemContainer>

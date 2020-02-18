@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { 
-    Container, 
+import {
+    Container,
     CircleButton,
     Content,
     VerticalContainer,
@@ -9,7 +9,7 @@ import {
     LabelItem,
     NumberItem,
     InfoContainer,
-    TextItem
+    TextItem,
 } from './styles/ItemStyles';
 
 import Toolbar from '../components/Toolbar';
@@ -25,7 +25,8 @@ export default function({ navigation }) {
             <Toolbar
                 title={`Mesa ${leftZero(table.number)}`}
                 content={<CircleButton icon="cart" disabled />}
-                onBack={() => navigation.goBack(null)} />
+                onBack={() => navigation.goBack(null)}
+            />
             <Content>
                 <HorizontalContainer>
                     <VerticalContainer>
@@ -36,8 +37,9 @@ export default function({ navigation }) {
                         height={55}
                         column={2}
                         item={{
-                            nome: observacao.split(':')[0]
-                        }}/>
+                            nome: observacao.split(':')[0],
+                        }}
+                    />
                 </HorizontalContainer>
                 <InfoContainer>
                     <TextItem>{observacao.split(':')[1]}</TextItem>

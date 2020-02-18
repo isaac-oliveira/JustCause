@@ -13,7 +13,7 @@ const reducers = combineReducers({
     categories,
     subcategories,
     products,
-    cart
+    cart,
 });
 
 export default reducers;

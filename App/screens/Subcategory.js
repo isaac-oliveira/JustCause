@@ -32,9 +32,7 @@ export default function({ navigation }) {
     const { loading, data, message } = useSelector(
         ({ subcategories }) => subcategories,
     );
-    const { lastId } = useSelector(
-        ({ cart }) => cart,
-    );
+    const { lastId } = useSelector(({ cart }) => cart);
     const dispatch = useDispatch();
     const [count, setCount] = useState(1);
     const [valueUnit, setValueUnit] = useState(parseFloat(productValue));
@@ -49,13 +47,13 @@ export default function({ navigation }) {
     }, [valueUnit, count]);
 
     function addInCart() {
-        observacao = `${productName}: `;
-        valorUnidade = parseFloat(productValue);
+        let observacao = `${productName}: `;
+        let valorUnidade = parseFloat(productValue);
         data.map(function(item) {
             const { singleSelection } = item;
-            if(singleSelection) {
+            if (singleSelection) {
                 const { currentItem } = item;
-                if(currentItem.nome && currentItem.valor) {
+                if (currentItem.nome && currentItem.valor) {
                     observacao += `${currentItem.nome}, `;
                     valorUnidade += parseFloat(currentItem.valor);
                 }
@@ -63,7 +61,7 @@ export default function({ navigation }) {
                 const { data: dataItem } = item;
                 dataItem.map(function(elem) {
                     const { selected } = elem;
-                    if(selected) {
+                    if (selected) {
                         const { nome, valor } = elem;
                         observacao += `${nome}, `;
                         valorUnidade += parseFloat(valor);
@@ -72,14 +70,16 @@ export default function({ navigation }) {
             }
         });
 
-        dispatch(CartCreators.addInCart({
-            id: toString(lastId),
-            idProduto: productId,
-            quantidade: count,
-            valorUnidade,
-            observacao: observacao.slice(0, observacao.length - 2)
-        }));
-        navigation.navigate('Cart', { table });
+        dispatch(
+            CartCreators.addInCart({
+                id: toString(lastId),
+                idProduto: productId,
+                quantidade: count,
+                valorUnidade,
+                observacao: observacao.slice(0, observacao.length - 2),
+            }),
+        );
+        navigation.navigate('Cart', { table, screenBack: 'Subcategory' });
     }
 
     const renderValue = () => <Title>{toMoney(value)}</Title>;
@@ -96,8 +96,9 @@ export default function({ navigation }) {
             function onPress() {
                 if (currentItem.id !== item.id) {
                     let aux = valueUnit;
-                    if (currentItem.valor)
+                    if (currentItem.valor) {
                         aux -= parseFloat(currentItem.valor);
+                    }
                     section.currentItem = item;
                     setValueUnit(aux + parseFloat(item.valor));
                 } else {
@@ -146,7 +147,7 @@ export default function({ navigation }) {
                     <Label>Qtd: </Label>
                     <Input
                         defaultValue={`${count}`}
-                        keyboardType='numeric'
+                        keyboardType="numeric"
                         onChangeText={text => {
                             if (text.trim() !== '0' && text.trim() !== '') {
                                 setCount(parseInt(text));

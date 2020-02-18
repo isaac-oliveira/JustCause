@@ -1,19 +1,19 @@
-INITIAL_STATE = {
+const INITIAL_STATE = {
     lastId: 0,
-    data: []
-}
+    data: [],
+};
 
 export const CartType = {
-    ADD_IN_CART:"ADD_IN_CART",
-    SEND_TO_KITCHEN:"SEND_TO_KITCHEN",
-    SEND_TO_KITCHEN_SUCESS:"SEND_TO_KITCHEN_SUCESS"
-}
+    ADD_IN_CART: 'ADD_IN_CART',
+    SEND_TO_KITCHEN: 'SEND_TO_KITCHEN',
+    SEND_TO_KITCHEN_SUCESS: 'SEND_TO_KITCHEN_SUCESS',
+};
 
 function addInCart(item) {
     return {
         type: CartType.ADD_IN_CART,
-        payload: item
-    }
+        payload: item,
+    };
 }
 
 function sendToKitchen(mesaId, itens) {
@@ -21,22 +21,25 @@ function sendToKitchen(mesaId, itens) {
         type: CartType.SEND_TO_KITCHEN,
         payload: {
             mesaId,
-            itens
-        }
-    }
+            itens,
+        },
+    };
 }
 
 export const CartCreators = {
     addInCart,
-    sendToKitchen
-}
+    sendToKitchen,
+};
 
 export default function(state = INITIAL_STATE, action) {
-    switch(action.type) {
+    switch (action.type) {
         case CartType.ADD_IN_CART:
-            return { lastId: state.lastId + 1, data: [...state.data, action.payload]};
+            return {
+                lastId: state.lastId + 1,
+                data: [...state.data, action.payload],
+            };
         case CartType.SEND_TO_KITCHEN_SUCESS:
-            return { ...state, data: []};
+            return { ...state, data: [] };
         default:
             return state;
     }

@@ -2,30 +2,32 @@ import React, { useState } from 'react';
 import { ToastAndroid } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { 
-    Container, 
-    HorizontalView, 
-    CircleButton, 
+import {
+    Container,
+    HorizontalView,
+    CircleButton,
     ItemContainer,
-    VerticalView,
-    Label,
-    Number,
+    Status,
+    VerticalContainer,
+    LabelItem,
+    NumberItem,
     Info,
-    InfoView } from './styles/CartStyle';
+    InfoView,
+} from './styles/CartStyle';
 
 import Toolbar from '../components/Toolbar';
 import List from '../components/List';
 import Button from '../components/Button';
 import Dialog from '../components/Dialog';
-import { CartCreators } from '../store/reducers/cart'
+import { CartCreators } from '../store/reducers/cart';
 import Color from '../themes/Color';
-import { leftZero } from '../util';
+import { leftZero, getColorStatus } from '../util';
 
 export default function({ navigation }) {
     const { data } = useSelector(({ cart }) => cart);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
-    const { table, item } = navigation.state.params;
+    const { table, itemRequests, screenBack } = navigation.state.params;
     const [visible, setVisible] = useState(false);
     const [itensDialog, setItensDialog] = useState([]);
 
@@ -44,16 +46,14 @@ export default function({ navigation }) {
 
     function renderItem({ item, index }) {
         function onPress() {
+            navigation.navigate('Item', {
+                table,
+                item: { ...item, index },
+            });
+        }
+
+        function onLongPress() {
             setItensDialog([
-                {
-                    title: 'Abrir',
-                    icon: 'open',
-                    click: () =>
-                        navigation.navigate('Item', {
-                            table,
-                            item: { ...item, index }
-                        }),
-                },
                 {
                     title: 'Duplicar',
                     icon: 'duplicate',
@@ -65,16 +65,18 @@ export default function({ navigation }) {
             ]);
             setVisible(true);
         }
-        const { observacao, valorUnidade } = item;
+        const { status, observacao, valorUnidade } = item;
 
         return (
             <CartItem
+                statusColor={itemRequests ? getColorStatus(status) : null}
                 label="Item"
                 number={index + 1}
                 info={observacao}
                 value={valorUnidade}
                 navigation={navigation}
                 onPress={onPress}
+                onLongPress={onLongPress}
             />
         );
     }
@@ -84,18 +86,18 @@ export default function({ navigation }) {
             <Toolbar
                 title={`Mesa ${leftZero(table.number)}`}
                 content={<CircleButton icon="cart" disabled />}
-                onBack={() => navigation.navigate('Request')}
+                onBack={() => navigation.navigate(screenBack)}
             />
             <List
                 style={{
                     width: '100%',
                     padding: 10,
                 }}
-                data={item ? item : data}
+                data={itemRequests ? itemRequests : data}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
             />
-            { !item &&
+            {!itemRequests && (
                 <HorizontalView>
                     <Button
                         title="Enviar para cozinha"
@@ -105,7 +107,7 @@ export default function({ navigation }) {
                     />
                     <CircleButton icon="add" size={18} onPress={add} />
                 </HorizontalView>
-            }
+            )}
             <Dialog
                 visible={visible}
                 itens={itensDialog}
@@ -115,16 +117,29 @@ export default function({ navigation }) {
     );
 }
 
-function CartItem({ number, label, info, value, onPress }) {
+function CartItem({
+    statusColor,
+    number,
+    label,
+    info,
+    value,
+    onPress,
+    onLongPress,
+}) {
     return (
-        <ItemContainer onPress={onPress}>
-            <VerticalView>
-                <Label>{label}</Label>
-                <Number>{leftZero(number)}</Number>
-            </VerticalView>
+        <ItemContainer onPress={onPress} onLongPress={onLongPress}>
+            {statusColor && <Status color={statusColor} />}
+            <VerticalContainer>
+                <LabelItem>{label}</LabelItem>
+                <NumberItem>{leftZero(number)}</NumberItem>
+            </VerticalContainer>
             <InfoView>
-                <Info>{info}</Info>
-                <Info>R$ {`${parseFloat(value).toFixed(2)}`.replace('.', ',')}</Info>
+                <Info>
+                    {info.length > 20 ? info.slice(0, 20) + '...' : info}
+                </Info>
+                <Info>
+                    R$ {`${parseFloat(value).toFixed(2)}`.replace('.', ',')}
+                </Info>
             </InfoView>
         </ItemContainer>
     );

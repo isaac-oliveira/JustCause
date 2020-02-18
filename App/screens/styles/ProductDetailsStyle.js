@@ -7,7 +7,7 @@ export const Title = styled.Text`
     font-family: ${Font.semibold};
     font-style: normal;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 16px;
     text-align: center;
 `;
 

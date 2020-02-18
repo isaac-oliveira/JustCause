@@ -61,7 +61,7 @@ export const ItemContainer = styled.TouchableOpacity`
     flex: 1;
     flex-direction: row;
     background-color: ${Color.white};
-    border-radius: 5px;
+    border-radius: 8px;
     margin: 5px;
     padding: 5px;
     elevation: 5px;
@@ -70,7 +70,7 @@ export const ItemContainer = styled.TouchableOpacity`
 export const Status = styled.View`
     width: 5px;
     margin-right: 2px;
-    ${({ color }) => color ? `background-color: ${color};` :  ''}
+    ${({ color }) => (color ? `background-color: ${color};` : '')}
 `;
 
 export const VerticalContainer = styled.View`
@@ -112,4 +112,3 @@ export const TextItem = styled.Text`
     letter-spacing: 0.1px;
     color: #898888;
 `;
-

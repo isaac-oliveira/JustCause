@@ -6,6 +6,7 @@ export const Container = styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    height: 58px;
 `;
 
 export const Content = styled.View`
@@ -21,7 +22,7 @@ export const Title = styled.Text`
     font-family: ${Font.semibold};
     font-style: normal;
     font-weight: 600;
-    font-size: 20px;
+    font-size: ${({ len }) => (len > 6 ? 140 / len : 22)}px;
     text-align: center;
     letter-spacing: 0.5px;
 `;

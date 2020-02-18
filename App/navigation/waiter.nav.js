@@ -19,7 +19,7 @@ const StackNavigator = createStackNavigator(
         Product: { screen: Product },
         Subcategory: { screen: Subcategory },
         Cart: { screen: Cart },
-        Item: { screen: Item }
+        Item: { screen: Item },
     },
     {
         initialRouteName: 'Home',

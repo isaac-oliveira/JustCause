@@ -87,7 +87,7 @@ async function sendToKitchen(mesa, montante, itens) {
     const response = await api.post('/carrinho', {
         mesa,
         montante,
-        itens
+        itens,
     });
 
     return response;
@@ -104,5 +104,5 @@ export default {
     getSubcategories,
     getSubcategoryItens,
     getItens,
-    sendToKitchen
+    sendToKitchen,
 };

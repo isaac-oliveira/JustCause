@@ -12,7 +12,9 @@ export default function({ onBack, content, title }) {
 
     return (
         <Container style={containerStyle}>
-            <Title style={titleStyle}>{title}</Title>
+            <Title style={titleStyle} len={title.length}>
+                {title}
+            </Title>
             {content && <Content>{content}</Content>}
             <IconButton icon="back" onPress={onBack} />
         </Container>

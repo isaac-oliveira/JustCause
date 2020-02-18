@@ -4,18 +4,18 @@ import { CartType } from '../store/reducers/cart';
 import JustCauseApi from '../services/JustCauseApi';
 
 function* postCart(action) {
-    let montante = 0
-    const { mesaId, itens} = action.payload
+    let montante = 0;
+    const { mesaId, itens } = action.payload;
     const aux = itens.map(function(item) {
         const { idProduto, quantidade, valorUnidade, observacao } = item;
-        montante += (quantidade * parseFloat(valorUnidade));
+        montante += quantidade * parseFloat(valorUnidade);
 
         return {
             idProduto,
             quantidade,
             valorUnidade,
-            observacao
-        }
+            observacao,
+        };
     });
     yield call(JustCauseApi.sendToKitchen, mesaId, montante, aux);
     yield put({ type: CartType.SEND_TO_KITCHEN_SUCESS });
