@@ -19,7 +19,7 @@ export const getColorStatus = function(status) {
             return Color.cardDisabled;
     }
 }
-
+//teste
 export const isEmpty = function(list) {
     return list.length === 0;
 };
