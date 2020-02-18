@@ -27,6 +27,10 @@ function* fetchToggle(action) {
     }
 }
 
+export const updateTable = function*(action) {
+    yield takeLatest(TableTypes.UPDATE_TABLES, fetchTables);
+};
+
 export const toggleTable = function*(action) {
     yield takeLatest(TableTypes.TABLE_TOGGLE, fetchToggle);
 };

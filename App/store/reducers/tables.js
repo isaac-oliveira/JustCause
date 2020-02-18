@@ -7,6 +7,7 @@ const INITIAL_STATE = {
 //Actions
 export const TableTypes = {
     GET_TABLES: 'GET_TABLES',
+    UPDATE_TABLES: 'UPDATE_TABLES',
     TABLES_RECEIVED: 'TABLES_RECEIVED',
     TABLES_FAILED: 'TABLES_FAILED',
     TABLE_TOGGLE: 'TABLE_TOGGLE',
@@ -17,12 +18,17 @@ function getTables() {
     return { type: TableTypes.GET_TABLES };
 }
 
+function updateTables() {
+    return { type: TableTypes.UPDATE_TABLES };
+}
+
 function getTableToggle(table) {
     return { type: TableTypes.TABLE_TOGGLE, payload: { table } };
 }
 
 export const TableCreators = {
     getTables,
+    updateTables,
     getTableToggle,
 };
 
