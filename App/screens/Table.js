@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AsyncStorage } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import io from 'socket.io-client';
 
 import { Container } from './styles';
 import {
@@ -14,12 +12,12 @@ import {
     SeatBottom,
 } from './styles/TableStyle';
 
-import BaseURL from '../config/JustCauseConfig';
 import Toolbar from '../components/Toolbar';
 import List from '../components/List';
 import Dialog from '../components/Dialog';
 
 import { TableCreators } from '../store/reducers/tables';
+import useSocketIO from '../services/SocketIO';
 import { leftZero } from '../util';
 
 export default function({ navigation }) {
@@ -29,30 +27,10 @@ export default function({ navigation }) {
     const [visible, setVisible] = useState(false);
     const [itensDialog, setItensDialog] = useState([]);
 
-    useEffect(() => {
-        async function load() {
-            const token = await AsyncStorage.getItem('@JustCause:token');
-            const socket = io('http://softeam.com.br:8080', {
-                transports: ['polling'],
-                path: '/justcause/socket.io',
-                query: { token },
-            });
-
-            socket.on('connect', function() {
-                dispatch(TableCreators.getTables());
-                console.log('connect');
-            });
-            socket.on('ocupar mesa', function() {
-                dispatch(TableCreators.updateTables());
-                console.log('update');
-            });
-            socket.on('liberar mesa', function() {
-                dispatch(TableCreators.updateTables());
-                console.log('update');
-            });
-        }
-        load();
-    }, [dispatch]);
+    const socket = useSocketIO(
+        () => dispatch(TableCreators.getTables()),
+        () => dispatch(TableCreators.resetTables()),
+    );
 
     function renderItem({ item }) {
         const { disponibilidade } = item;

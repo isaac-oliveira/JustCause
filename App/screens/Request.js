@@ -34,6 +34,8 @@ export default function({ navigation }) {
     useEffect(() => {
         async function load() {
             const response = await JustCauseApi.getRequests(table.id);
+            console.log('Atendimento');
+            console.log(response.data);
             if (response.ok) {
                 setRequetsApi(response.data);
                 let aux = 0;
