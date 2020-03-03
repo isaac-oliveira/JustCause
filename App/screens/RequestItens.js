@@ -1,38 +1,21 @@
 import React, { useState } from 'react';
-import { ToastAndroid } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { Container, HorizontalView, CircleButton } from './styles/CartStyle';
+import { Container, CircleButton } from './styles/CartStyle';
 
 import Toolbar from '../components/Toolbar';
 import List from '../components/List';
 import CartItem from '../components/CartItem';
-import Button from '../components/Button';
 import Dialog from '../components/Dialog';
-import { CartCreators } from '../store/reducers/cart';
-import Color from '../themes/Color';
-import { leftZero } from '../util';
+import { leftZero, getColorStatus } from '../util';
 
 export default function({ navigation }) {
-    const { data } = useSelector(({ cart }) => cart);
-    const dispatch = useDispatch();
+    const { dataApi } = useSelector(({ request }) => request);
 
-    const { table, screenBack } = navigation.state.params;
+    const { table, indexItem, screenBack } = navigation.state.params;
     const [visible, setVisible] = useState(false);
     const [itensDialog, setItensDialog] = useState([]);
 
-    function sendToChicken() {
-        ToastAndroid.show('Enviado para a cozinha!', ToastAndroid.SHORT);
-        dispatch(CartCreators.sendToKitchen(table.id, data));
-        navigation.navigate('Table');
-    }
-
-    function add() {
-        navigation.navigate('Category', {
-            table,
-            screenBack: 'Cart',
-        });
-    }
 
     function renderItem({ item, index }) {
         function onPress() {
@@ -55,10 +38,11 @@ export default function({ navigation }) {
             ]);
             setVisible(true);
         }
-        const { observacao, valorUnidade, quantidade } = item;
+        const { status, observacao, valorUnidade, quantidade } = item;
 
         return (
             <CartItem
+                statusColor={getColorStatus(status)}
                 label="Item"
                 number={index + 1}
                 info={observacao}
@@ -82,19 +66,10 @@ export default function({ navigation }) {
                     width: '100%',
                     padding: 10,
                 }}
-                data={data}
+                data={dataApi[indexItem].itens}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
             />
-            <HorizontalView>
-                <Button
-                    title="Enviar para cozinha"
-                    background={Color.white}
-                    elevation={3}
-                    onPress={sendToChicken}
-                />
-                <CircleButton icon="add" size={18} onPress={add} />
-            </HorizontalView>
             <Dialog
                 visible={visible}
                 itens={itensDialog}

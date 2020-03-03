@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { View, AsyncStorage } from 'react-native';
+import { View, AsyncStorage, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
 
+import Loading from '../components/Loading';
 import JustCauseApi from '../services/JustCauseApi';
 import Color from '../themes/Color';
 
@@ -14,16 +15,31 @@ export default function({ navigation: { navigate } }) {
                 await AsyncStorage.getItem('@JustCause:userId'),
             );
 
-            const response = await JustCauseApi.getUser(userId);
-            const { data } = response;
+            JustCauseApi.getUser(userId).then(function(response) {
+                if (response.ok) {
+                    const { data } = response;
+                    const screen = response.status !== 401 ? 'Waiter' : 'Login';
+                    navigate(screen);
 
-            dispatch({ type: 'UPDATE_USER', data });
-
-            const screen = response.status !== 401 ? 'Waiter' : 'Login';
-            navigate(screen);
+                    dispatch({ type: 'UPDATE_USER', data });
+                }
+            });
         }
         loadScreen();
     });
 
-    return <View style={{ flex: 1, backgroundColor: Color.background }} />;
+    return (
+        <View style={styles.container}>
+            <Loading />
+        </View>
+    );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Color.background,
+    },
+});

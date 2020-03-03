@@ -40,14 +40,11 @@ export default function({ navigation }) {
             const socket = await SocketIO();
             socket.on('update item carrinho', function() {
                 dispatch(RequestCreators.updateRequests(table));
+                console.log('update item carrinho');
             });
             dispatch(RequestCreators.getRequests(table));
-
-            return () => {
-                socket.close();
-            };
         }
-        return load();
+        load();
     }, [dispatch, table]);
 
     function closeCount() {
@@ -64,7 +61,7 @@ export default function({ navigation }) {
 
     function renderItem({ item, index }) {
         const { id, info, value, status } = item;
-        console.log(id);
+        
         return (
             <RequestItem
                 label="Pedido"
@@ -73,9 +70,9 @@ export default function({ navigation }) {
                 value={value}
                 statusColor={getColorStatus(status)}
                 onPress={() =>
-                    navigation.navigate('Cart', {
+                    navigation.navigate('RequestItens', {
                         table,
-                        itemRequests: dataApi[index].itens,
+                        indexItem: index,
                         screenBack: 'Request',
                     })
                 }
