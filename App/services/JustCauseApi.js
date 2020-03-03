@@ -93,6 +93,11 @@ async function sendToKitchen(mesa, montante, itens) {
     return response;
 }
 
+async function closeCount(requestId) {
+    const response = await api.put(`/atendimento/${requestId}`);
+    return response;
+}
+
 export default {
     login,
     getUser,
@@ -105,4 +110,5 @@ export default {
     getSubcategoryItens,
     getItens,
     sendToKitchen,
+    closeCount,
 };

@@ -35,13 +35,16 @@ export const ItemContainer = styled.TouchableOpacity`
 export const Status = styled.View`
     width: 5px;
     margin-right: 2px;
-    ${({ color }) => (color ? `background-color: ${color};` : '')}
+    background-color: ${({ color }) => (color ? color : Color.secundary)};
 `;
 
 export const VerticalContainer = styled.View`
-    justify-content: center;
-    align-items: center;
-    padding: 5px;
+    padding: 10px;
+`;
+
+export const HorizontalContainer = styled.View`
+    flex-direction: row;
+    justify-content: space-evenly;
 `;
 
 export const LabelItem = styled.Text`
@@ -60,10 +63,9 @@ export const NumberItem = styled(LabelItem)`
 `;
 
 export const InfoView = styled(VerticalContainer)`
-    position: absolute;
-    align-self: center;
-    left: 0;
-    right: 0;
+    flex: 1;
+    padding: 5px;
+    justify-content: flex-end;
 `;
 
 export const Info = styled.Text`
@@ -75,4 +77,11 @@ export const Info = styled.Text`
     text-align: center;
     letter-spacing: 0.1px;
     color: ${Color.textColor};
+`;
+
+export const Description = styled(Info)`
+    position: absolute;
+    padding-top: 10px;
+    left: 0;
+    right: 0;
 `;

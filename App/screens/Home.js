@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { AsyncStorage } from 'react-native';
 
 import {
     Container,
@@ -19,26 +18,10 @@ import {
 } from './styles/HomeStyle';
 
 import Color from '../themes/Color';
-import JustCauseApi from '../services/JustCauseApi';
 
 export default function({ navigation: { navigate } }) {
     const user = useSelector(({ employee }) => employee.user);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        async function loadUser() {
-            const userId = JSON.parse(
-                await AsyncStorage.getItem('@JustCause:userId'),
-            );
-            const response = await JustCauseApi.getUser(userId);
-            const { data } = response;
-
-            dispatch({ type: 'UPDATE_USER', data });
-        }
-        if (!user) {
-            loadUser();
-        }
-    }, [dispatch, user]);
 
     function logout() {
         dispatch({ type: 'LOGOUT_REQUEST' });

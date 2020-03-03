@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ToastAndroid } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -9,9 +9,11 @@ import {
     ItemContainer,
     Status,
     VerticalContainer,
+    HorizontalContainer,
     LabelItem,
     NumberItem,
     Info,
+    Description,
     InfoView,
 } from './styles/CartStyle';
 
@@ -19,6 +21,7 @@ import Toolbar from '../components/Toolbar';
 import List from '../components/List';
 import Button from '../components/Button';
 import Dialog from '../components/Dialog';
+import SocketIO from '../services/SocketIO';
 import { CartCreators } from '../store/reducers/cart';
 import Color from '../themes/Color';
 import { leftZero, getColorStatus } from '../util';
@@ -30,6 +33,24 @@ export default function({ navigation }) {
     const { table, itemRequests, screenBack } = navigation.state.params;
     const [visible, setVisible] = useState(false);
     const [itensDialog, setItensDialog] = useState([]);
+    const [dataItem, setDataItem] = useState(itemRequests);
+
+    useEffect(() => {
+        async function load() {
+            const socket = await SocketIO();
+
+            socket.on('update item carrinho', function(res) {
+                const newData = dataItem.map(function(item) {
+                    if (res.id === item.id) {
+                        return res;
+                    }
+                    return item;
+                });
+                setDataItem(newData);
+            });
+        }
+        load();
+    }, [dataItem]);
 
     function sendToChicken() {
         ToastAndroid.show('Enviado para a cozinha!', ToastAndroid.SHORT);
@@ -65,15 +86,16 @@ export default function({ navigation }) {
             ]);
             setVisible(true);
         }
-        const { status, observacao, valorUnidade } = item;
+        const { status, observacao, valorUnidade, quantidade } = item;
 
         return (
             <CartItem
-                statusColor={itemRequests ? getColorStatus(status) : null}
+                statusColor={dataItem ? getColorStatus(status) : null}
                 label="Item"
                 number={index + 1}
                 info={observacao}
                 value={valorUnidade}
+                count={quantidade}
                 navigation={navigation}
                 onPress={onPress}
                 onLongPress={onLongPress}
@@ -93,11 +115,11 @@ export default function({ navigation }) {
                     width: '100%',
                     padding: 10,
                 }}
-                data={itemRequests ? itemRequests : data}
+                data={dataItem ? dataItem : data}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
             />
-            {!itemRequests && (
+            {!dataItem && (
                 <HorizontalView>
                     <Button
                         title="Enviar para cozinha"
@@ -123,24 +145,35 @@ function CartItem({
     label,
     info,
     value,
+    count,
     onPress,
     onLongPress,
 }) {
     return (
         <ItemContainer onPress={onPress} onLongPress={onLongPress}>
-            {statusColor && <Status color={statusColor} />}
+            <Status color={statusColor} />
             <VerticalContainer>
                 <LabelItem>{label}</LabelItem>
                 <NumberItem>{leftZero(number)}</NumberItem>
             </VerticalContainer>
             <InfoView>
-                <Info>
-                    {info.length > 20 ? info.slice(0, 20) + '...' : info}
-                </Info>
-                <Info>
-                    R$ {`${parseFloat(value).toFixed(2)}`.replace('.', ',')}
-                </Info>
+                <HorizontalContainer>
+                    <Info>x{`${count}`}</Info>
+                    <Info>
+                        R$ {`${parseFloat(value).toFixed(2)}`.replace('.', ',')}
+                    </Info>
+                    <Info>
+                        Total: R${' '}
+                        {`${parseFloat(value * count).toFixed(2)}`.replace(
+                            '.',
+                            ',',
+                        )}
+                    </Info>
+                </HorizontalContainer>
             </InfoView>
+            <Description>
+                {info.length > 20 ? info.slice(0, 20) + '...' : info}
+            </Description>
         </ItemContainer>
     );
 }

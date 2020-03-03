@@ -18,7 +18,7 @@ import { leftZero, toMoney } from '../util';
 
 export default function({ navigation }) {
     const { table, item } = navigation.state.params;
-    const { index, observacao, valorUnidade } = item;
+    const { index, observacao, valorUnidade, quantidade } = item;
 
     return (
         <Container>
@@ -43,7 +43,13 @@ export default function({ navigation }) {
                 </HorizontalContainer>
                 <InfoContainer>
                     <TextItem>{observacao.split(':')[1]}</TextItem>
-                    <TextItem>{toMoney(valorUnidade)}</TextItem>
+                    <HorizontalContainer>
+                        <TextItem>x{quantidade}</TextItem>
+                        <TextItem>{toMoney(valorUnidade)}</TextItem>
+                        <TextItem>
+                            Total: {toMoney(valorUnidade * quantidade)}
+                        </TextItem>
+                    </HorizontalContainer>
                 </InfoContainer>
             </Content>
         </Container>

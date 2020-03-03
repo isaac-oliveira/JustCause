@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Container } from './styles';
 import {
@@ -21,64 +22,39 @@ import {
 import Toolbar from '../components/Toolbar';
 import List from '../components/List';
 import JustCauseApi from '../services/JustCauseApi';
+import SocketIO from '../services/SocketIO';
+import { RequestCreators } from '../store/reducers/request';
 import Color from '../themes/Color';
 
 import { leftZero, isEmpty, toMoney, getColorStatus } from '../util';
 
 export default function({ navigation }) {
     const { table } = navigation.state.params;
-    const [requests, setRequets] = useState([]);
-    const [requestsApi, setRequetsApi] = useState([]);
-    const [total, setTotal] = useState(0);
+    const { loading, data, total, dataApi, message } = useSelector(
+        ({ request }) => request,
+    );
+    const dispatch = useDispatch();
 
     useEffect(() => {
         async function load() {
-            const response = await JustCauseApi.getRequests(table.id);
-            if (response.ok) {
-                setRequetsApi(response.data);
-                let aux = 0;
-                const data = response.data.map(function(item, index) {
-                    let checkedStatus = 2;
-                    let statusRequest = 'enviado para cozinha';
-                    let info = '';
-                    let value = 0;
-                    for (let i = 0; i < item.length; i++) {
-                        const { observacao, montante, status } = item[i];
-                        info += `${observacao.split(':')[0]}, `;
-                        value += parseFloat(montante);
-                        if (
-                            status === 'enviado para cozinha' &&
-                            checkedStatus !== 1
-                        ) {
-                            checkedStatus = 0;
-                        }
-                        if (status === 'preparando') {
-                            checkedStatus = 1;
-                        }
-                    }
-                    if (checkedStatus !== 0) {
-                        statusRequest =
-                            checkedStatus === 2 ? 'pronto' : 'preparando';
-                    }
-                    info = info.slice(0, info.length - 2);
-                    aux += value;
+            const socket = await SocketIO();
+            socket.on('update item carrinho', function() {
+                dispatch(RequestCreators.updateRequests(table));
+            });
+            dispatch(RequestCreators.getRequests(table));
 
-                    return {
-                        id: index,
-                        info,
-                        value,
-                        status: statusRequest,
-                    };
-                });
-
-                setTotal(aux);
-                setRequets(data);
-            }
+            return () => {
+                socket.close();
+            };
         }
-        load();
-    }, [table.id]);
+        return load();
+    }, [dispatch, table]);
 
     function closeCount() {
+        data.map(function(item) {
+            const { id } = item;
+            JustCauseApi.closeCount(id);
+        });
         navigation.navigate('Table');
     }
 
@@ -88,10 +64,9 @@ export default function({ navigation }) {
 
     function renderItem({ item, index }) {
         const { id, info, value, status } = item;
-
+        console.log(id);
         return (
             <RequestItem
-                key={`${id}`}
                 label="Pedido"
                 number={index + 1}
                 info={info}
@@ -100,7 +75,7 @@ export default function({ navigation }) {
                 onPress={() =>
                     navigation.navigate('Cart', {
                         table,
-                        itemRequests: requestsApi[id],
+                        itemRequests: dataApi[index].itens,
                         screenBack: 'Request',
                     })
                 }
@@ -116,13 +91,15 @@ export default function({ navigation }) {
             />
             <List
                 style={{ width: '100%', padding: 10 }}
-                data={requests}
+                loading={loading}
+                message={message}
+                data={data}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
             />
             <HorizontalView>
                 <CircleButton icon="add" size={18} onPress={add} />
-                {!isEmpty(requests) && (
+                {!isEmpty(data) && (
                     <VerticalView>
                         <Total>
                             <Label>TOTAL: </Label>
