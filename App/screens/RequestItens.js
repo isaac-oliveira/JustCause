@@ -1,21 +1,42 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { Container, CircleButton } from './styles/CartStyle';
+import { Container } from './styles/CartStyle';
 
 import Toolbar from '../components/Toolbar';
 import List from '../components/List';
 import CartItem from '../components/CartItem';
 import Dialog from '../components/Dialog';
+import SocketIO from '../services/SocketIO';
+import { RequestCreators } from '../store/reducers/request';
 import { leftZero, getColorStatus } from '../util';
 
 export default function({ navigation }) {
-    const { dataApi } = useSelector(({ request }) => request);
+    const dispatch = useDispatch();
 
-    const { table, indexItem, screenBack } = navigation.state.params;
+    const { table, itens, screenBack } = navigation.state.params;
     const [visible, setVisible] = useState(false);
     const [itensDialog, setItensDialog] = useState([]);
+    const [data, setData] = useState(itens);
 
+    useEffect(() => {
+        async function load() {
+            const socket = await SocketIO();
+            socket.on('update item carrinho', function(elem) {
+                dispatch(RequestCreators.updateRequests(table));
+
+                const newData = data.map(function(item) {
+                    if (item.id === elem.id) {
+                        return elem;
+                    }
+                    return item;
+                });
+                setData(newData);
+                console.log('update item carrinho');
+            });
+        }
+        load();
+    });
 
     function renderItem({ item, index }) {
         function onPress() {
@@ -58,7 +79,6 @@ export default function({ navigation }) {
         <Container>
             <Toolbar
                 title={`Mesa ${leftZero(table.number)}`}
-                content={<CircleButton icon="cart" disabled />}
                 onBack={() => navigation.navigate(screenBack)}
             />
             <List
@@ -66,7 +86,7 @@ export default function({ navigation }) {
                     width: '100%',
                     padding: 10,
                 }}
-                data={dataApi[indexItem].itens}
+                data={data}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
             />

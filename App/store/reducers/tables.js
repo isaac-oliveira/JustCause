@@ -11,6 +11,7 @@ export const TableTypes = {
     TABLES_RECEIVED: 'TABLES_RECEIVED',
     TABLES_FAILED: 'TABLES_FAILED',
     TABLE_TOGGLE: 'TABLE_TOGGLE',
+    RESET_TABLES: 'RESET_TABLES',
 };
 
 //Creators
@@ -26,10 +27,15 @@ function getTableToggle(table) {
     return { type: TableTypes.TABLE_TOGGLE, payload: { table } };
 }
 
+function resetTables() {
+    return { type: TableTypes.RESET_TABLES };
+}
+
 export const TableCreators = {
     getTables,
     updateTables,
     getTableToggle,
+    resetTables,
 };
 
 //reducer
@@ -41,6 +47,8 @@ export default function Tables(state = INITIAL_STATE, { type, data }) {
             return INITIAL_STATE;
         case TableTypes.TABLES_FAILED:
             return { loading: false, data: [], message: data };
+        case TableTypes.RESET_TABLES:
+            return INITIAL_STATE;
         default:
             return state;
     }

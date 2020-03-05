@@ -15,15 +15,16 @@ export default function({ navigation: { navigate } }) {
                 await AsyncStorage.getItem('@JustCause:userId'),
             );
 
-            JustCauseApi.getUser(userId).then(function(response) {
-                if (response.ok) {
-                    const { data } = response;
-                    const screen = response.status !== 401 ? 'Waiter' : 'Login';
-                    navigate(screen);
+            const response = await JustCauseApi.getUser(userId);
+            if (response.ok) {
+                const { data } = response;
+                dispatch({ type: 'UPDATE_USER', data });
 
-                    dispatch({ type: 'UPDATE_USER', data });
-                }
-            });
+                const screen = response.status !== 401 ? 'Waiter' : 'Login';
+                navigate(screen);
+            } else {
+                navigate('Login');
+            }
         }
         loadScreen();
     });

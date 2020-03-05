@@ -36,16 +36,20 @@ export default function({ navigation }) {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        dispatch(RequestCreators.getRequests(table));
+    }, [dispatch, table]);
+
+    useEffect(() => {
         async function load() {
             const socket = await SocketIO();
-            socket.on('update item carrinho', function() {
-                dispatch(RequestCreators.updateRequests(table));
+            socket.on('update item carrinho', function(item) {
+                dispatch(RequestCreators.updateRequests(item));
                 console.log('update item carrinho');
             });
-            dispatch(RequestCreators.getRequests(table));
+            console.log('componentDidUpdate');
         }
         load();
-    }, [dispatch, table]);
+    });
 
     function closeCount() {
         data.map(function(item) {
@@ -61,7 +65,7 @@ export default function({ navigation }) {
 
     function renderItem({ item, index }) {
         const { id, info, value, status } = item;
-        
+
         return (
             <RequestItem
                 label="Pedido"
@@ -72,7 +76,7 @@ export default function({ navigation }) {
                 onPress={() =>
                     navigation.navigate('RequestItens', {
                         table,
-                        indexItem: index,
+                        itens: dataApi[index].itens,
                         screenBack: 'Request',
                     })
                 }

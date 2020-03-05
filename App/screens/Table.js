@@ -37,6 +37,7 @@ export default function({ navigation }) {
             dispatch(TableCreators.getTables());
         }
         load();
+        return () => dispatch(TableCreators.resetTables());
     }, [dispatch]);
 
     function renderItem({ item }) {

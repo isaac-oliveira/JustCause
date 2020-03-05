@@ -24,7 +24,6 @@ export default function({ navigation }) {
         <Container>
             <Toolbar
                 title={`Mesa ${leftZero(table.number)}`}
-                content={<CircleButton icon="cart" disabled />}
                 onBack={() => navigation.goBack(null)}
             />
             <Content>
