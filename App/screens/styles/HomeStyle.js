@@ -1,7 +1,12 @@
 import styled from 'styled-components/native';
+
+import { Dimensions } from 'react-native';
+
 import Icon from '../../components/Icon';
 import Color from '../../themes/Color';
 import Font from '../../themes/Font';
+
+const size = Dimensions.get('screen').width/3;
 
 export const Container = styled.View`
     flex: 1;
@@ -37,27 +42,27 @@ export const InfoContainer = styled.View`
 export const PhotoContainer = styled.View`
     justify-content: center;
     align-items: center;
-    width: 120px;
+    width: ${size}px;
 `;
 
 export const Photo = styled.Image`
-    border-radius: 65px;
+    border-radius: ${size/2};
     border-width: 2px;
     border-color: ${Color.secundary};
-    width: 120px;
-    height: 120px;
+    width: ${size}px;
+    height: ${size}px;
 `;
 
 export const State = styled.View`
     position: absolute;
-    border-radius: 65px;
+    border-radius: ${size/4};
     border-width: 2px;
     border-color: ${Color.secundary};
     background-color: ${Color.primary};
     top: 0;
     right: 0;
-    width: 30px;
-    height: 30px;
+    width: ${size/4};
+    height: ${size/4};
 `;
 
 export const Name = styled.Text`
@@ -73,6 +78,8 @@ export const Name = styled.Text`
 `;
 
 export const ButtonContainer = styled.View`
+    flex: 1;
+    justify-content: center;
     width: 100%;
 `;
 

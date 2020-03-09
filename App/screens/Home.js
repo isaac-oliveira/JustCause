@@ -49,9 +49,7 @@ export default function({ navigation: { navigate } }) {
                     title="Mesas"
                     onPress={() => navigate('Table')}
                 />
-                <IconButton icon="menu" title="Cardápio" onPress={() => {}} />
             </ButtonContainer>
-            <IconButton icon="settings" title="Settings" onPress={() => {}} />
         </Container>
     );
 }

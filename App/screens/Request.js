@@ -48,7 +48,6 @@ export default function({ navigation }) {
                 console.log('update item carrinho');
             });
             console.log('componentDidUpdate');
-            
         }
         load();
     });

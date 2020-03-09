@@ -43,7 +43,7 @@ export default function Requests(state = INITIAL_STATE, { type, payload }) {
             return INITIAL_STATE;
         case RequestTypes.REQUETS_FAILED:
             return { loading: false, data: [], message: payload };
-        case RequestCreators.RESET_REQUETS:
+        case RequestTypes.RESET_REQUETS:
             return INITIAL_STATE;
         default:
             return state;

@@ -28,17 +28,21 @@ export default function({ navigation }) {
     const [itensDialog, setItensDialog] = useState([]);
 
     useEffect(() => {
+        dispatch(TableCreators.getTables());
+        return () => dispatch(TableCreators.resetTables());
+    }, []);
+
+    useEffect(() => {
         async function load() {
             const socket = await SocketIO();
             socket.on('update mesa', function() {
                 dispatch(TableCreators.updateTables());
                 console.log('update');
             });
-            dispatch(TableCreators.getTables());
+            
         }
-        load();
-        return () => dispatch(TableCreators.resetTables());
-    }, [dispatch]);
+        load();   
+    });
 
     function renderItem({ item }) {
         const { disponibilidade } = item;
