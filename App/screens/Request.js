@@ -37,6 +37,7 @@ export default function({ navigation }) {
 
     useEffect(() => {
         dispatch(RequestCreators.getRequests(table));
+        return () => dispatch(RequestCreators.resetRequests());
     }, [dispatch, table]);
 
     useEffect(() => {
@@ -47,6 +48,7 @@ export default function({ navigation }) {
                 console.log('update item carrinho');
             });
             console.log('componentDidUpdate');
+            
         }
         load();
     });
@@ -95,7 +97,7 @@ export default function({ navigation }) {
                 loading={loading}
                 message={message}
                 data={data}
-                keyExtractor={item => item.id}
+                keyExtractor={item => toString(item.id)}
                 renderItem={renderItem}
             />
             <HorizontalView>

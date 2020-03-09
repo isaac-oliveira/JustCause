@@ -4,12 +4,10 @@ import JustCauseApi from '../services/JustCauseApi';
 
 import { EmployeeTypes } from '../store/reducers/employee';
 
-const jwtDecode = require('jwt-decode');
-
-async function saveTokenAndUserId(token, userId) {
+async function saveTokenAndUser(token, user) {
     await AsyncStorage.multiSet([
         ['@JustCause:token', token],
-        ['@JustCause:userId', userId],
+        ['@JustCause:user', user],
     ]);
 }
 
@@ -18,12 +16,11 @@ function* fetchLogin(action) {
     let response = yield call(JustCauseApi.login, username, password);
     const { data } = response;
     if (response.ok) {
-        const { token } = data;
-        const { id } = jwtDecode(token);
-        yield call(saveTokenAndUserId, token, JSON.stringify(id));
+        const { funcionario, token } = data;
+        
+        yield call(saveTokenAndUser, token, JSON.stringify(funcionario));
 
-        const user = yield call(JustCauseApi.getUser, id).data;
-        yield put({ type: EmployeeTypes.LOGIN_SECESS, data: user });
+        yield put({ type: EmployeeTypes.LOGIN_SECESS, data: funcionario });
     } else {
         const { message } = data;
         yield put({ type: EmployeeTypes.LOGIN_FAILED, data: message });

@@ -87,7 +87,7 @@ export default function({ navigation }) {
                     padding: 10,
                 }}
                 data={data}
-                keyExtractor={item => item.id}
+                keyExtractor={item => toString(item.id)}
                 renderItem={renderItem}
             />
             <Dialog

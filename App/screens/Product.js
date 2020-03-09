@@ -17,6 +17,7 @@ export default function({ navigation }) {
 
     useEffect(() => {
         dispatch(ProductCreators.getProducts(categoryId));
+        return () => dispatch(ProductCreators.resetProducts());
     }, [categoryId, dispatch]);
 
     const renderItem = ({ item }) => {

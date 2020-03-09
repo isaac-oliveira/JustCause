@@ -78,10 +78,6 @@ export default function({ navigation }) {
                 onBack={() => navigation.navigate(screenBack)}
             />
             <List
-                style={{
-                    width: '100%',
-                    padding: 10,
-                }}
                 data={data}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}

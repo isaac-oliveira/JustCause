@@ -6,6 +6,7 @@ import {
     Logout,
     LogoutText,
     Perfil,
+    InfoContainer,
     PhotoContainer,
     Photo,
     State,
@@ -34,11 +35,13 @@ export default function({ navigation: { navigate } }) {
                 <Logout onPress={logout}>
                     <LogoutText>Sair</LogoutText>
                 </Logout>
-                <PhotoContainer>
-                    <Photo source={require('../assets/perfil.jpg')} />
-                    <State />
-                </PhotoContainer>
-                <Name>{user ? user.name : ''}</Name>
+                <InfoContainer>
+                    <PhotoContainer>
+                        <Photo source={require('../assets/perfil.jpg')} />
+                        <State />
+                    </PhotoContainer>
+                    <Name>{user ? user.name : ''}</Name>
+                </InfoContainer>
             </Perfil>
             <ButtonContainer>
                 <IconButton

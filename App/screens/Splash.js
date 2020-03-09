@@ -11,12 +11,11 @@ export default function({ navigation: { navigate } }) {
 
     useEffect(() => {
         async function loadScreen() {
-            const userId = JSON.parse(
-                await AsyncStorage.getItem('@JustCause:userId'),
+            const user = JSON.parse(
+                await AsyncStorage.getItem('@JustCause:user'),
             );
-
-            const response = await JustCauseApi.getUser(userId);
-            if (response.ok) {
+            if(user != null) {
+                const response = await JustCauseApi.getUser(user.id);
                 const { data } = response;
                 dispatch({ type: 'UPDATE_USER', data });
 
@@ -25,6 +24,7 @@ export default function({ navigation: { navigate } }) {
             } else {
                 navigate('Login');
             }
+            
         }
         loadScreen();
     });

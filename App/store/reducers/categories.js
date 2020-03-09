@@ -9,6 +9,7 @@ export const CategoryTypes = {
     GET_CATEGORIES: 'GET_CATEGORIES',
     CATEGORIES_RECEIVED: 'CATEGORIES_RECEIVED',
     CATEGORIES_FAILED: 'CATEGORIES_FAILED',
+    RESET_CATEGORIES: 'RESET_CATEGORIES',
 };
 
 //Creators
@@ -16,8 +17,14 @@ function getCategories() {
     return { type: CategoryTypes.GET_CATEGORIES };
 }
 
+function resetCategories() {
+    return { type: CategoryTypes.RESET_CATEGORIES };
+}
+
+
 export const CategoryCreators = {
     getCategories,
+    resetCategories
 };
 
 //reducer
@@ -29,6 +36,8 @@ export default function Categories(state = INITIAL_STATE, { type, data }) {
             return INITIAL_STATE;
         case CategoryTypes.CATEGORIES_FAILED:
             return { loading: false, data: [], message: data };
+        case CategoryTypes.RESET_CATEGORIES:
+            return INITIAL_STATE;
         default:
             return state;
     }

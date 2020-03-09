@@ -20,6 +20,7 @@ export default function({ navigation }) {
 
     useEffect(() => {
         dispatch(CategoryCreators.getCategories());
+        return () => dispatch(CategoryCreators.resetCategories());
     }, [dispatch]);
 
     const renderItem = ({ item }) => {

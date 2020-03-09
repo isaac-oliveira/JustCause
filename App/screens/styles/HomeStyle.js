@@ -12,6 +12,7 @@ export const Container = styled.View`
 
 export const Perfil = styled.View`
     align-items: center;
+    height: 40%;
     width: 100%;
 `;
 
@@ -25,6 +26,12 @@ export const LogoutText = styled.Text`
     font-family: ${Font.normal};
     font-style: normal;
     font-weight: normal;
+`;
+
+export const InfoContainer = styled.View`
+    flex: 1;
+    justify-content: center;
+    align-items: center;
 `;
 
 export const PhotoContainer = styled.View`

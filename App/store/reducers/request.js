@@ -12,6 +12,7 @@ export const RequestTypes = {
     UPDATE_REQUETS: 'UPDATE_REQUETS',
     REQUETS_RECEIVED: 'REQUETS_RECEIVED',
     REQUETS_FAILED: 'REQUETS_FAILED',
+    RESET_REQUETS: 'RESET_REQUETS',
 };
 
 //Creators
@@ -23,9 +24,14 @@ function updateRequests(table) {
     return { type: RequestTypes.UPDATE_REQUETS, payload: table };
 }
 
+function resetRequests() {
+    return { type: RequestTypes.RESET_REQUETS };
+}
+
 export const RequestCreators = {
     getRequests,
     updateRequests,
+    resetRequests,
 };
 
 //reducer
@@ -37,6 +43,8 @@ export default function Requests(state = INITIAL_STATE, { type, payload }) {
             return INITIAL_STATE;
         case RequestTypes.REQUETS_FAILED:
             return { loading: false, data: [], message: payload };
+        case RequestCreators.RESET_REQUETS:
+            return INITIAL_STATE;
         default:
             return state;
     }

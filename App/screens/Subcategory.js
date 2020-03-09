@@ -40,6 +40,7 @@ export default function({ navigation }) {
 
     useEffect(() => {
         dispatch(SubcategoryCreators.getSubcategories(productId));
+        return () => dispatch(SubcategoryCreators.resetSubcategories());
     }, [dispatch, productId]);
 
     useEffect(() => {
@@ -142,26 +143,28 @@ export default function({ navigation }) {
                 renderSectionHeader={renderSectionHeader}
                 renderItem={renderSectionItem}
             />
-            <Horizontal>
-                <Form>
-                    <Label>Qtd: </Label>
-                    <Input
-                        defaultValue={`${count}`}
-                        keyboardType="numeric"
-                        onChangeText={text => {
-                            if (text.trim() !== '0' && text.trim() !== '') {
-                                setCount(parseInt(text));
-                            }
-                        }}
+            { !loading &&
+                <Horizontal>
+                    <Form>
+                        <Label>Qtd: </Label>
+                        <Input
+                            defaultValue={`${count}`}
+                            keyboardType="numeric"
+                            onChangeText={text => {
+                                if (text.trim() !== '0' && text.trim() !== '') {
+                                    setCount(parseInt(text));
+                                }
+                            }}
+                        />
+                    </Form>
+                    <Button
+                        style={{ width: '35%' }}
+                        title="Adicionar"
+                        background={Color.primary}
+                        onPress={addInCart}
                     />
-                </Form>
-                <Button
-                    style={{ width: '35%' }}
-                    title="Adicionar"
-                    background={Color.primary}
-                    onPress={addInCart}
-                />
-            </Horizontal>
+                </Horizontal>
+            }
         </Container>
     );
 }
