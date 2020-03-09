@@ -42,6 +42,9 @@
         "reactotron-redux-saga": "^4.2.3"
     },
     "jest": {
-        "preset": "react-native"
+        "preset": "react-native",
+        "modulePathIgnorePatterns": [
+            "node_modules"
+          ]
     }
 }
