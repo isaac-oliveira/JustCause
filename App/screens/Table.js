@@ -39,7 +39,6 @@ export default function({ navigation }) {
                 dispatch(TableCreators.updateTables());
                 console.log('update');
             });
-            
         }
         load();   
     });

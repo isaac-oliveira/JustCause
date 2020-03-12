@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ToastAndroid } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Container } from './styles';
@@ -38,7 +39,7 @@ export default function({ navigation }) {
     useEffect(() => {
         dispatch(RequestCreators.getRequests(table));
         return () => dispatch(RequestCreators.resetRequests());
-    }, [dispatch, table]);
+    }, []);
 
     useEffect(() => {
         async function load() {
@@ -53,6 +54,7 @@ export default function({ navigation }) {
     });
 
     function closeCount() {
+        ToastAndroid.show('Conta fechada!', ToastAndroid.SHORT);
         data.map(function(item) {
             const { id } = item;
             JustCauseApi.closeCount(id);

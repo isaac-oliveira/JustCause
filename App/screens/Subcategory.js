@@ -24,7 +24,7 @@ import HeaderList from '../components/HeaderList';
 import { SubcategoryCreators } from '../store/reducers/subcategories';
 import { CartCreators } from '../store/reducers/cart';
 import Color from '../themes/Color';
-import { toMoney, leftZero } from '../util';
+import { toMoney } from '../util';
 
 export default function({ navigation }) {
     const { product, table } = navigation.state.params;
@@ -41,7 +41,7 @@ export default function({ navigation }) {
     useEffect(() => {
         dispatch(SubcategoryCreators.getSubcategories(productId));
         return () => dispatch(SubcategoryCreators.resetSubcategories());
-    }, [dispatch, productId]);
+    }, []);
 
     useEffect(() => {
         setValue(valueUnit * count);
